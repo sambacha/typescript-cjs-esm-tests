@@ -1,5 +1,11 @@
 # `stdlib` 
 
+## Overview
+
+Testing best way to support cjs and esm and how to structure project to enable that (see results.txt for more info)
+
+> BELOW IS FROM TYPESCRIPT WIKI 
+
 ## Specification
 
 ```
