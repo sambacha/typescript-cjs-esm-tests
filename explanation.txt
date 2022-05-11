@@ -1,0 +1,284 @@
+node_modules/typescript/lib/lib.es5.d.ts
+  Library referenced via 'es5' from file 'node_modules/typescript/lib/lib.es2015.d.ts'
+  Library referenced via 'es5' from file 'node_modules/typescript/lib/lib.es2015.d.ts'
+node_modules/typescript/lib/lib.es2015.d.ts
+  Library referenced via 'es2015' from file 'node_modules/typescript/lib/lib.es2016.d.ts'
+  Library referenced via 'es2015' from file 'node_modules/typescript/lib/lib.es2016.d.ts'
+node_modules/typescript/lib/lib.es2016.d.ts
+  Library referenced via 'es2016' from file 'node_modules/typescript/lib/lib.es2017.d.ts'
+  Library referenced via 'es2016' from file 'node_modules/typescript/lib/lib.es2017.d.ts'
+node_modules/typescript/lib/lib.es2017.d.ts
+  Library referenced via 'es2017' from file 'node_modules/typescript/lib/lib.es2018.d.ts'
+  Library referenced via 'es2017' from file 'node_modules/typescript/lib/lib.es2018.d.ts'
+node_modules/typescript/lib/lib.es2018.d.ts
+  Library referenced via 'es2018' from file 'node_modules/typescript/lib/lib.es2019.d.ts'
+  Library referenced via 'es2018' from file 'node_modules/typescript/lib/lib.es2019.d.ts'
+node_modules/typescript/lib/lib.es2019.d.ts
+  Library referenced via 'es2019' from file 'node_modules/typescript/lib/lib.es2020.d.ts'
+  Library referenced via 'es2019' from file 'node_modules/typescript/lib/lib.es2020.d.ts'
+node_modules/typescript/lib/lib.es2020.d.ts
+  Library referenced via 'es2020' from file 'node_modules/@types/node/index.d.ts'
+  Library referenced via 'es2020' from file 'node_modules/typescript/lib/lib.es2021.d.ts'
+node_modules/typescript/lib/lib.es2021.d.ts
+  Library referenced via 'es2021' from file 'node_modules/typescript/lib/lib.es2022.d.ts'
+node_modules/typescript/lib/lib.es2022.d.ts
+  Library referenced via 'es2022' from file 'node_modules/typescript/lib/lib.esnext.d.ts'
+node_modules/typescript/lib/lib.esnext.d.ts
+  Library referenced via 'esnext' from file 'node_modules/typescript/lib/lib.esnext.full.d.ts'
+node_modules/typescript/lib/lib.dom.d.ts
+  Library referenced via 'dom' from file 'node_modules/typescript/lib/lib.esnext.full.d.ts'
+node_modules/typescript/lib/lib.dom.iterable.d.ts
+  Library referenced via 'dom.iterable' from file 'node_modules/typescript/lib/lib.esnext.full.d.ts'
+node_modules/typescript/lib/lib.webworker.importscripts.d.ts
+  Library referenced via 'webworker.importscripts' from file 'node_modules/typescript/lib/lib.esnext.full.d.ts'
+node_modules/typescript/lib/lib.scripthost.d.ts
+  Library referenced via 'scripthost' from file 'node_modules/typescript/lib/lib.esnext.full.d.ts'
+node_modules/typescript/lib/lib.es2015.core.d.ts
+  Library referenced via 'es2015.core' from file 'node_modules/typescript/lib/lib.es2015.d.ts'
+  Library referenced via 'es2015.core' from file 'node_modules/typescript/lib/lib.es2015.d.ts'
+node_modules/typescript/lib/lib.es2015.collection.d.ts
+  Library referenced via 'es2015.collection' from file 'node_modules/typescript/lib/lib.es2015.d.ts'
+  Library referenced via 'es2015.collection' from file 'node_modules/typescript/lib/lib.es2015.d.ts'
+node_modules/typescript/lib/lib.es2015.generator.d.ts
+  Library referenced via 'es2015.generator' from file 'node_modules/typescript/lib/lib.es2015.d.ts'
+  Library referenced via 'es2015.generator' from file 'node_modules/typescript/lib/lib.es2015.d.ts'
+node_modules/typescript/lib/lib.es2015.iterable.d.ts
+  Library referenced via 'es2015.iterable' from file 'node_modules/typescript/lib/lib.es2015.d.ts'
+  Library referenced via 'es2015.iterable' from file 'node_modules/typescript/lib/lib.es2015.generator.d.ts'
+  Library referenced via 'es2015.iterable' from file 'node_modules/typescript/lib/lib.es2018.asynciterable.d.ts'
+  Library referenced via 'es2015.iterable' from file 'node_modules/typescript/lib/lib.es2019.object.d.ts'
+  Library referenced via 'es2015.iterable' from file 'node_modules/typescript/lib/lib.es2020.string.d.ts'
+  Library referenced via 'es2015.iterable' from file 'node_modules/typescript/lib/lib.es2020.symbol.wellknown.d.ts'
+  Library referenced via 'es2015.iterable' from file 'node_modules/typescript/lib/lib.es2015.d.ts'
+  Library referenced via 'es2015.iterable' from file 'node_modules/typescript/lib/lib.es2015.generator.d.ts'
+  Library referenced via 'es2015.iterable' from file 'node_modules/typescript/lib/lib.es2018.asynciterable.d.ts'
+  Library referenced via 'es2015.iterable' from file 'node_modules/typescript/lib/lib.es2019.object.d.ts'
+  Library referenced via 'es2015.iterable' from file 'node_modules/typescript/lib/lib.es2020.string.d.ts'
+  Library referenced via 'es2015.iterable' from file 'node_modules/typescript/lib/lib.es2020.symbol.wellknown.d.ts'
+node_modules/typescript/lib/lib.es2015.promise.d.ts
+  Library referenced via 'es2015.promise' from file 'node_modules/typescript/lib/lib.es2015.d.ts'
+  Library referenced via 'es2015.promise' from file 'node_modules/typescript/lib/lib.es2015.d.ts'
+node_modules/typescript/lib/lib.es2015.proxy.d.ts
+  Library referenced via 'es2015.proxy' from file 'node_modules/typescript/lib/lib.es2015.d.ts'
+  Library referenced via 'es2015.proxy' from file 'node_modules/typescript/lib/lib.es2015.d.ts'
+node_modules/typescript/lib/lib.es2015.reflect.d.ts
+  Library referenced via 'es2015.reflect' from file 'node_modules/typescript/lib/lib.es2015.d.ts'
+  Library referenced via 'es2015.reflect' from file 'node_modules/typescript/lib/lib.es2015.d.ts'
+node_modules/typescript/lib/lib.es2015.symbol.d.ts
+  Library referenced via 'es2015.symbol' from file 'node_modules/typescript/lib/lib.es2015.iterable.d.ts'
+  Library referenced via 'es2015.symbol' from file 'node_modules/typescript/lib/lib.es2015.d.ts'
+  Library referenced via 'es2015.symbol' from file 'node_modules/typescript/lib/lib.es2015.symbol.wellknown.d.ts'
+  Library referenced via 'es2015.symbol' from file 'node_modules/typescript/lib/lib.es2017.sharedmemory.d.ts'
+  Library referenced via 'es2015.symbol' from file 'node_modules/typescript/lib/lib.es2018.asynciterable.d.ts'
+  Library referenced via 'es2015.symbol' from file 'node_modules/typescript/lib/lib.es2020.symbol.wellknown.d.ts'
+  Library referenced via 'es2015.symbol' from file 'node_modules/typescript/lib/lib.es2015.iterable.d.ts'
+  Library referenced via 'es2015.symbol' from file 'node_modules/typescript/lib/lib.es2015.d.ts'
+  Library referenced via 'es2015.symbol' from file 'node_modules/typescript/lib/lib.es2015.symbol.wellknown.d.ts'
+  Library referenced via 'es2015.symbol' from file 'node_modules/typescript/lib/lib.es2017.sharedmemory.d.ts'
+  Library referenced via 'es2015.symbol' from file 'node_modules/typescript/lib/lib.es2018.asynciterable.d.ts'
+  Library referenced via 'es2015.symbol' from file 'node_modules/typescript/lib/lib.es2020.symbol.wellknown.d.ts'
+node_modules/typescript/lib/lib.es2015.symbol.wellknown.d.ts
+  Library referenced via 'es2015.symbol.wellknown' from file 'node_modules/typescript/lib/lib.es2015.d.ts'
+  Library referenced via 'es2015.symbol.wellknown' from file 'node_modules/typescript/lib/lib.es2017.sharedmemory.d.ts'
+  Library referenced via 'es2015.symbol.wellknown' from file 'node_modules/typescript/lib/lib.es2015.d.ts'
+  Library referenced via 'es2015.symbol.wellknown' from file 'node_modules/typescript/lib/lib.es2017.sharedmemory.d.ts'
+node_modules/typescript/lib/lib.es2016.array.include.d.ts
+  Library referenced via 'es2016.array.include' from file 'node_modules/typescript/lib/lib.es2016.d.ts'
+  Library referenced via 'es2016.array.include' from file 'node_modules/typescript/lib/lib.es2016.d.ts'
+node_modules/typescript/lib/lib.es2017.object.d.ts
+  Library referenced via 'es2017.object' from file 'node_modules/typescript/lib/lib.es2017.d.ts'
+  Library referenced via 'es2017.object' from file 'node_modules/typescript/lib/lib.es2017.d.ts'
+node_modules/typescript/lib/lib.es2017.sharedmemory.d.ts
+  Library referenced via 'es2017.sharedmemory' from file 'node_modules/typescript/lib/lib.es2017.d.ts'
+  Library referenced via 'es2017.sharedmemory' from file 'node_modules/typescript/lib/lib.es2017.d.ts'
+node_modules/typescript/lib/lib.es2017.string.d.ts
+  Library referenced via 'es2017.string' from file 'node_modules/typescript/lib/lib.es2017.d.ts'
+  Library referenced via 'es2017.string' from file 'node_modules/typescript/lib/lib.es2017.d.ts'
+node_modules/typescript/lib/lib.es2017.intl.d.ts
+  Library referenced via 'es2017.intl' from file 'node_modules/typescript/lib/lib.es2017.d.ts'
+  Library referenced via 'es2017.intl' from file 'node_modules/typescript/lib/lib.es2017.d.ts'
+node_modules/typescript/lib/lib.es2017.typedarrays.d.ts
+  Library referenced via 'es2017.typedarrays' from file 'node_modules/typescript/lib/lib.es2017.d.ts'
+  Library referenced via 'es2017.typedarrays' from file 'node_modules/typescript/lib/lib.es2017.d.ts'
+node_modules/typescript/lib/lib.es2018.asyncgenerator.d.ts
+  Library referenced via 'es2018.asyncgenerator' from file 'node_modules/typescript/lib/lib.es2018.d.ts'
+  Library referenced via 'es2018.asyncgenerator' from file 'node_modules/typescript/lib/lib.es2018.d.ts'
+node_modules/typescript/lib/lib.es2018.asynciterable.d.ts
+  Library referenced via 'es2018.asynciterable' from file 'node_modules/typescript/lib/lib.es2018.d.ts'
+  Library referenced via 'es2018.asynciterable' from file 'node_modules/typescript/lib/lib.es2018.asyncgenerator.d.ts'
+  Library referenced via 'esnext.asynciterable' from file 'node_modules/@types/node/index.d.ts'
+  Library referenced via 'es2018.asynciterable' from file 'node_modules/typescript/lib/lib.es2018.d.ts'
+  Library referenced via 'es2018.asynciterable' from file 'node_modules/typescript/lib/lib.es2018.asyncgenerator.d.ts'
+node_modules/typescript/lib/lib.es2018.intl.d.ts
+  Library referenced via 'es2018.intl' from file 'node_modules/typescript/lib/lib.es2018.d.ts'
+  Library referenced via 'es2018.intl' from file 'node_modules/typescript/lib/lib.es2018.d.ts'
+node_modules/typescript/lib/lib.es2018.promise.d.ts
+  Library referenced via 'es2018.promise' from file 'node_modules/typescript/lib/lib.es2018.d.ts'
+  Library referenced via 'es2018.promise' from file 'node_modules/typescript/lib/lib.es2018.d.ts'
+node_modules/typescript/lib/lib.es2018.regexp.d.ts
+  Library referenced via 'es2018.regexp' from file 'node_modules/typescript/lib/lib.es2018.d.ts'
+  Library referenced via 'es2018.regexp' from file 'node_modules/typescript/lib/lib.es2018.d.ts'
+node_modules/typescript/lib/lib.es2019.array.d.ts
+  Library referenced via 'es2019.array' from file 'node_modules/typescript/lib/lib.es2019.d.ts'
+  Library referenced via 'es2019.array' from file 'node_modules/typescript/lib/lib.es2019.d.ts'
+node_modules/typescript/lib/lib.es2019.object.d.ts
+  Library referenced via 'es2019.object' from file 'node_modules/typescript/lib/lib.es2019.d.ts'
+  Library referenced via 'es2019.object' from file 'node_modules/typescript/lib/lib.es2019.d.ts'
+node_modules/typescript/lib/lib.es2019.string.d.ts
+  Library referenced via 'es2019.string' from file 'node_modules/typescript/lib/lib.es2019.d.ts'
+  Library referenced via 'es2019.string' from file 'node_modules/typescript/lib/lib.es2019.d.ts'
+node_modules/typescript/lib/lib.es2019.symbol.d.ts
+  Library referenced via 'es2019.symbol' from file 'node_modules/typescript/lib/lib.es2019.d.ts'
+  Library referenced via 'es2019.symbol' from file 'node_modules/typescript/lib/lib.es2019.d.ts'
+node_modules/typescript/lib/lib.es2020.bigint.d.ts
+  Library referenced via 'es2020.bigint' from file 'node_modules/typescript/lib/lib.es2020.d.ts'
+  Library referenced via 'esnext.bigint' from file 'node_modules/@types/node/index.d.ts'
+  Library referenced via 'es2020.bigint' from file 'node_modules/typescript/lib/lib.es2020.d.ts'
+node_modules/typescript/lib/lib.es2020.promise.d.ts
+  Library referenced via 'es2020.promise' from file 'node_modules/typescript/lib/lib.es2020.d.ts'
+  Library referenced via 'es2020.promise' from file 'node_modules/typescript/lib/lib.es2020.d.ts'
+node_modules/typescript/lib/lib.es2020.sharedmemory.d.ts
+  Library referenced via 'es2020.sharedmemory' from file 'node_modules/typescript/lib/lib.es2020.d.ts'
+  Library referenced via 'es2020.sharedmemory' from file 'node_modules/typescript/lib/lib.es2020.d.ts'
+node_modules/typescript/lib/lib.es2020.string.d.ts
+  Library referenced via 'es2020.string' from file 'node_modules/typescript/lib/lib.es2020.d.ts'
+  Library referenced via 'es2020.string' from file 'node_modules/typescript/lib/lib.es2020.d.ts'
+node_modules/typescript/lib/lib.es2020.symbol.wellknown.d.ts
+  Library referenced via 'es2020.symbol.wellknown' from file 'node_modules/typescript/lib/lib.es2020.d.ts'
+  Library referenced via 'es2020.symbol.wellknown' from file 'node_modules/typescript/lib/lib.es2020.d.ts'
+node_modules/typescript/lib/lib.es2020.intl.d.ts
+  Library referenced via 'es2020.intl' from file 'node_modules/typescript/lib/lib.es2020.d.ts'
+  Library referenced via 'es2020.intl' from file 'node_modules/typescript/lib/lib.es2020.d.ts'
+node_modules/typescript/lib/lib.es2021.promise.d.ts
+  Library referenced via 'es2021.promise' from file 'node_modules/typescript/lib/lib.es2021.d.ts'
+node_modules/typescript/lib/lib.es2021.string.d.ts
+  Library referenced via 'es2021.string' from file 'node_modules/typescript/lib/lib.es2021.d.ts'
+node_modules/typescript/lib/lib.es2021.weakref.d.ts
+  Library referenced via 'es2021.weakref' from file 'node_modules/typescript/lib/lib.es2021.d.ts'
+node_modules/typescript/lib/lib.es2021.intl.d.ts
+  Library referenced via 'es2021.intl' from file 'node_modules/typescript/lib/lib.es2021.d.ts'
+node_modules/typescript/lib/lib.es2022.array.d.ts
+  Library referenced via 'es2022.array' from file 'node_modules/typescript/lib/lib.es2022.d.ts'
+node_modules/typescript/lib/lib.es2022.error.d.ts
+  Library referenced via 'es2022.error' from file 'node_modules/typescript/lib/lib.es2022.d.ts'
+node_modules/typescript/lib/lib.es2022.object.d.ts
+  Library referenced via 'es2022.object' from file 'node_modules/typescript/lib/lib.es2022.d.ts'
+node_modules/typescript/lib/lib.es2022.string.d.ts
+  Library referenced via 'es2022.string' from file 'node_modules/typescript/lib/lib.es2022.d.ts'
+node_modules/typescript/lib/lib.esnext.intl.d.ts
+  Library referenced via 'esnext.intl' from file 'node_modules/@types/node/index.d.ts'
+  Library referenced via 'esnext.intl' from file 'node_modules/typescript/lib/lib.esnext.d.ts'
+node_modules/typescript/lib/lib.esnext.full.d.ts
+  Default library for target 'esnext'
+src/events/events.ts
+  Imported via './events' from file 'src/events/index.ts'
+  Matched by include pattern 'src' in 'tsconfig.json'
+src/events/index.ts
+  Imported via './events' from file 'src/index.ts'
+  Imported via './events' from file 'src/index.ts'
+  Matched by include pattern 'src' in 'tsconfig.json'
+src/index.ts
+  Matched by include pattern 'src' in 'tsconfig.json'
+node_modules/@types/node/assert.d.ts
+  Referenced via 'assert.d.ts' from file 'node_modules/@types/node/index.d.ts'
+node_modules/@types/node/assert/strict.d.ts
+  Referenced via 'assert/strict.d.ts' from file 'node_modules/@types/node/index.d.ts'
+node_modules/@types/node/globals.d.ts
+  Referenced via 'globals.d.ts' from file 'node_modules/@types/node/index.d.ts'
+node_modules/@types/node/async_hooks.d.ts
+  Referenced via 'async_hooks.d.ts' from file 'node_modules/@types/node/index.d.ts'
+node_modules/@types/node/buffer.d.ts
+  Referenced via 'buffer.d.ts' from file 'node_modules/@types/node/index.d.ts'
+node_modules/@types/node/child_process.d.ts
+  Referenced via 'child_process.d.ts' from file 'node_modules/@types/node/index.d.ts'
+node_modules/@types/node/cluster.d.ts
+  Referenced via 'cluster.d.ts' from file 'node_modules/@types/node/index.d.ts'
+node_modules/@types/node/console.d.ts
+  Referenced via 'console.d.ts' from file 'node_modules/@types/node/index.d.ts'
+node_modules/@types/node/constants.d.ts
+  Referenced via 'constants.d.ts' from file 'node_modules/@types/node/index.d.ts'
+node_modules/@types/node/crypto.d.ts
+  Referenced via 'crypto.d.ts' from file 'node_modules/@types/node/index.d.ts'
+node_modules/@types/node/dgram.d.ts
+  Referenced via 'dgram.d.ts' from file 'node_modules/@types/node/index.d.ts'
+node_modules/@types/node/diagnostics_channel.d.ts
+  Referenced via 'diagnostics_channel.d.ts' from file 'node_modules/@types/node/index.d.ts'
+node_modules/@types/node/dns.d.ts
+  Referenced via 'dns.d.ts' from file 'node_modules/@types/node/index.d.ts'
+node_modules/@types/node/dns/promises.d.ts
+  Referenced via 'dns/promises.d.ts' from file 'node_modules/@types/node/index.d.ts'
+  Referenced via 'dns/promises.d.ts' from file 'node_modules/@types/node/index.d.ts'
+node_modules/@types/node/domain.d.ts
+  Referenced via 'domain.d.ts' from file 'node_modules/@types/node/index.d.ts'
+node_modules/@types/node/events.d.ts
+  Referenced via 'events.d.ts' from file 'node_modules/@types/node/index.d.ts'
+node_modules/@types/node/fs.d.ts
+  Referenced via 'fs.d.ts' from file 'node_modules/@types/node/index.d.ts'
+node_modules/@types/node/fs/promises.d.ts
+  Referenced via 'fs/promises.d.ts' from file 'node_modules/@types/node/index.d.ts'
+node_modules/@types/node/http.d.ts
+  Referenced via 'http.d.ts' from file 'node_modules/@types/node/index.d.ts'
+node_modules/@types/node/http2.d.ts
+  Referenced via 'http2.d.ts' from file 'node_modules/@types/node/index.d.ts'
+node_modules/@types/node/https.d.ts
+  Referenced via 'https.d.ts' from file 'node_modules/@types/node/index.d.ts'
+node_modules/@types/node/inspector.d.ts
+  Referenced via 'inspector.d.ts' from file 'node_modules/@types/node/index.d.ts'
+node_modules/@types/node/module.d.ts
+  Referenced via 'module.d.ts' from file 'node_modules/@types/node/index.d.ts'
+node_modules/@types/node/net.d.ts
+  Referenced via 'net.d.ts' from file 'node_modules/@types/node/index.d.ts'
+node_modules/@types/node/os.d.ts
+  Referenced via 'os.d.ts' from file 'node_modules/@types/node/index.d.ts'
+node_modules/@types/node/path.d.ts
+  Referenced via 'path.d.ts' from file 'node_modules/@types/node/index.d.ts'
+node_modules/@types/node/perf_hooks.d.ts
+  Referenced via 'perf_hooks.d.ts' from file 'node_modules/@types/node/index.d.ts'
+node_modules/@types/node/process.d.ts
+  Referenced via 'process.d.ts' from file 'node_modules/@types/node/index.d.ts'
+node_modules/@types/node/punycode.d.ts
+  Referenced via 'punycode.d.ts' from file 'node_modules/@types/node/index.d.ts'
+node_modules/@types/node/querystring.d.ts
+  Referenced via 'querystring.d.ts' from file 'node_modules/@types/node/index.d.ts'
+node_modules/@types/node/readline.d.ts
+  Referenced via 'readline.d.ts' from file 'node_modules/@types/node/index.d.ts'
+node_modules/@types/node/repl.d.ts
+  Referenced via 'repl.d.ts' from file 'node_modules/@types/node/index.d.ts'
+node_modules/@types/node/stream.d.ts
+  Referenced via 'stream.d.ts' from file 'node_modules/@types/node/index.d.ts'
+node_modules/@types/node/stream/promises.d.ts
+  Referenced via 'stream/promises.d.ts' from file 'node_modules/@types/node/index.d.ts'
+node_modules/@types/node/stream/consumers.d.ts
+  Referenced via 'stream/consumers.d.ts' from file 'node_modules/@types/node/index.d.ts'
+node_modules/@types/node/stream/web.d.ts
+  Referenced via 'stream/web.d.ts' from file 'node_modules/@types/node/index.d.ts'
+node_modules/@types/node/string_decoder.d.ts
+  Referenced via 'string_decoder.d.ts' from file 'node_modules/@types/node/index.d.ts'
+node_modules/@types/node/timers.d.ts
+  Referenced via 'timers.d.ts' from file 'node_modules/@types/node/index.d.ts'
+node_modules/@types/node/timers/promises.d.ts
+  Referenced via 'timers/promises.d.ts' from file 'node_modules/@types/node/index.d.ts'
+node_modules/@types/node/tls.d.ts
+  Referenced via 'tls.d.ts' from file 'node_modules/@types/node/index.d.ts'
+node_modules/@types/node/trace_events.d.ts
+  Referenced via 'trace_events.d.ts' from file 'node_modules/@types/node/index.d.ts'
+node_modules/@types/node/tty.d.ts
+  Referenced via 'tty.d.ts' from file 'node_modules/@types/node/index.d.ts'
+node_modules/@types/node/url.d.ts
+  Referenced via 'url.d.ts' from file 'node_modules/@types/node/index.d.ts'
+node_modules/@types/node/util.d.ts
+  Referenced via 'util.d.ts' from file 'node_modules/@types/node/index.d.ts'
+node_modules/@types/node/v8.d.ts
+  Referenced via 'v8.d.ts' from file 'node_modules/@types/node/index.d.ts'
+node_modules/@types/node/vm.d.ts
+  Referenced via 'vm.d.ts' from file 'node_modules/@types/node/index.d.ts'
+node_modules/@types/node/wasi.d.ts
+  Referenced via 'wasi.d.ts' from file 'node_modules/@types/node/index.d.ts'
+node_modules/@types/node/worker_threads.d.ts
+  Referenced via 'worker_threads.d.ts' from file 'node_modules/@types/node/index.d.ts'
+node_modules/@types/node/zlib.d.ts
+  Referenced via 'zlib.d.ts' from file 'node_modules/@types/node/index.d.ts'
+node_modules/@types/node/globals.global.d.ts
+  Referenced via 'globals.global.d.ts' from file 'node_modules/@types/node/index.d.ts'
+node_modules/@types/node/index.d.ts
+  Entry point of type library 'node' specified in compilerOptions with packageId '@types/node/index.d.ts@16.11.34'
