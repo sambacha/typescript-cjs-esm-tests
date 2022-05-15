@@ -24,6 +24,43 @@
 }
 ```
 
+
+> source: [https://devblogs.microsoft.com/typescript/announcing-typescript-4-5-beta/](https://devblogs.microsoft.com/typescript/announcing-typescript-4-5-beta/)
+
+```json
+// package.json
+{
+    "name": "my-package",
+    "type": "module",
+    "exports": {
+        ".": {
+            // Entry-point for `import "my-package"` in ESM
+            "import": "./esm/index.js",
+
+            // Entry-point for `require("my-package") in CJS
+            "require": "./commonjs/index.cjs",
+
+            // Entry-point for TypeScript resolution
+            "types": "./types/index.d.ts"
+        },
+    },
+
+    // CJS fall-back for older versions of Node.js
+    "main": "./commonjs/index.cjs",
+
+    // Fall-back for older versions of TypeScript
+    "types": "./types/index.d.ts"
+}
+```
+
+```json
+{
+ "dependencies": {
+    "@typescript/lib-dom": "npm:@types/web"
+  }
+}
+```
+
 ## types
 
 
