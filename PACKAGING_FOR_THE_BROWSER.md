@@ -1,3 +1,29 @@
+## manifest
+
+```json
+{
+  "sideEffects": false,
+  "type": "module",
+  "main": "index.js",
+  "types": "index.d.ts",
+  "browser": {
+    "./lib/lib1.js": "./lib/lib1.browser.js",
+    "./lib/lib2.js": "./lib/lib2.browser.js",
+    "./lib/lib3.js": "./lib/lib3.browser.js"
+  },
+  "react-native": {
+    "./lib/lib1.js": "./lib/lib1.browser.js",
+    "./lib/lib2.js": "./lib/lib2.browser.js",
+    "./lib/lib3.js": "./lib/lib3.browser.js"
+  },
+  "files": [
+    "lib/",
+    "index.d.ts",
+    "index.js"
+  ]
+}
+```
+
 ## types
 
 
