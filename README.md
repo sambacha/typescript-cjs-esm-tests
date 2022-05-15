@@ -1,11 +1,30 @@
-# `stdlib` 
+# `std.module.format` 
+
+- [`std.module.format`](#-stdmoduleformat-)
+  * [Overview](#overview)
+  * [Patterns: Prefer Named Exports](#avoid-default-exports-and-prefer-named-exports)
+    + [Context](#context)
+    + [Summary](#summary)
+  * [File Extenstions](#decision)
+    + [ECMAScript Module Support in Node.js](#ecmascript-module-support-in-nodejs)
+    + [`.mjs`, `.cjs`, == `.mts`, `.cts` && `.d.mts` and `.d.cts`.](#-mjs----cjs-------mts----cts------dmts--and--dcts-)
+  * [Anti-Patterns: Avoid Export Default](#avoid-export-default)
+    + [Poor Discoverability](#poor-discoverability)
+    + [Autocomplete](#autocomplete)
+    + [CommonJS interop](#commonjs-interop)
+    + [Typo Protection](#typo-protection)
+    + [TypeScript auto-import](#typescript-auto-import)
+    + [Re-exporting](#re-exporting)
+    + [Dynamic Imports](#dynamic-imports)
+    + [Needs two lines for non-class / non-function](#needs-two-lines-for-non-class---non-function)
 
 ## Overview
+
 
 Testing best way to support cjs and esm and how to structure project to enable that (see results.txt for more info)
 
 
-## Avoid Default Exports and Prefer Named Exports'
+## Avoid Default Exports and Prefer Named Exports
 
 ### Context
 
@@ -77,10 +96,49 @@ Imports that bypass an index file are discouraged, but may sometimes be necessar
 import { helperFunc } from '../../lib/UtilityX/helper';
 ```
 
+### ECMAScript Module Support in Node.js
+
+> source https://devblogs.microsoft.com/typescript/announcing-typescript-4-5-beta/
+
+For the last few years, Node.js has been working to support running ECMAScript modules (ESM). This has been a very difficult feature to support, since the foundation of the Node.js ecosystem is built on a different module system called CommonJS (CJS). Interoperating between the two brings large challenges, with many new features to juggle; however, support for ESM in Node.js is now largely implemented in Node.js 12 and later, and the dust has begun to settle.
+
+That’s why TypeScript 4.5 brings two new module settings: node12 and nodenext.
+```json
+{
+    "compilerOptions": {
+        "module": "nodenext",
+    }
+}
+```
+
+These new modes bring a few high-level features which we’ll explore here.
+
+type in package.json and New Extensions
+Node.js supports a new setting in package.json called type. "type" can be set to either "module" or "commonjs".
+```json
+{
+    "name": "my-package",
+    "type": "module",
+
+    "//": "...",
+    "dependencies": {
+    }
+}
+```
+### `.mjs`, `.cjs`, == `.mts`, `.cts` && `.d.mts` and `.d.cts`.
+
+Node.js supports two extensions to help with this: `.mjs` and `.cjs`. `.mjs` files are always ES modules, and `.cjs` files are always CommonJS modules, and there’s no way to override these.
+
+In turn, TypeScript supports two new source file extensions: .mts and `.cts`. When TypeScript emits these to JavaScript files, it will emit them to `.mjs` and `.cjs` respectively.
+
+Furthermore, TypeScript also supports two new declaration file extensions: .d.mts and .d.cts. When TypeScript generates declaration files for `.mts` and `.cts`, their corresponding extensions will be `.d.mts` and `.d.cts`.
+
+Using these extensions is entirely optional, but will often be useful even if you choose not to use them as part of your primary workflow.
 
 
+## Avoid Export Default
 
-## Avoid Export Default - TypeScript Deep Dive
+> source:  TypeScript Deep Dive
 
 > [source https://basarat.gitbook.io/typescript/main-1/defaultisbad](https://basarat.gitbook.io/typescript/main-1/defaultisbad)
 
@@ -101,8 +159,9 @@ There are a few maintainability concerns here:
 
 For this reason I recommend simple exports + destructured import. E.g. `foo.ts`:
 
+```typescript
 import { Foo } from "./foo";
-
+```
 Below I also present a few more reasons.
 
 ### Poor Discoverability
