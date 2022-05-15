@@ -27,7 +27,7 @@
 
 > source: [https://devblogs.microsoft.com/typescript/announcing-typescript-4-5-beta/](https://devblogs.microsoft.com/typescript/announcing-typescript-4-5-beta/)
 
-```json
+```jsonc
 // package.json
 {
     "name": "my-package",
