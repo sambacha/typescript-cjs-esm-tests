@@ -245,3 +245,27 @@ soWhat: 'The export is now \*removed\* from the declaration'
 };
 export default foo;
 ```
+
+### React.js - Named Exports
+
+> [source, https://reactjs.org/docs/code-splitting.html#named-exports](https://reactjs.org/docs/code-splitting.html#named-exports)
+
+
+React.lazy currently only supports default exports. If the module you want to import uses named exports, you can create an intermediate module that reexports it as the default. This ensures that tree shaking keeps working and that you don’t pull in unused components.
+
+```javascript
+// ManyComponents.js
+export const MyComponent = /* ... */;
+export const MyUnusedComponent = /* ... */;
+```
+
+```javascript
+// MyComponent.js
+export { MyComponent as default } from "./ManyComponents.js";
+```
+
+```javascript
+// MyApp.js
+import React, { lazy } from 'react';
+const MyComponent = lazy(() => import("./MyComponent.js"));
+```
