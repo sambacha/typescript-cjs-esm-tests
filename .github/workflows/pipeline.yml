@@ -4,10 +4,12 @@ name: pipeline
 on:
   pull_request:
     branches:
-      - 'release-*'
-      - 'master'
+      - 'trunk'
     tags-ignore:
       - '*'
+  push:
+    branches:
+      - 'master'
 env:
   CI: ''
   COMMIT_SHA: ${{ github.event.pull_request.head.sha }}
