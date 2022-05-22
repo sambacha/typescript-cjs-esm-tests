@@ -1,4 +1,4 @@
-import { EventEmitter } from "node:events";
+import { EventEmitter } from 'node:events';
 
 // IMPORTANT NOTE: This class is type-checked against the currently installed
 // version of @types/node (16.x atm), and manually checked to be compatible with
@@ -14,10 +14,7 @@ import { EventEmitter } from "node:events";
 export class EventEmitterWrapper implements EventEmitter {
   constructor(private readonly _wrapped: EventEmitter) {}
 
-  public addListener(
-    event: string | symbol,
-    listener: (...args: any[]) => void
-  ): this {
+  public addListener(event: string | symbol, listener: (...args: any[]) => void): this {
     this._wrapped.addListener(event, listener);
     return this;
   }
@@ -27,34 +24,22 @@ export class EventEmitterWrapper implements EventEmitter {
     return this;
   }
 
-  public once(
-    event: string | symbol,
-    listener: (...args: any[]) => void
-  ): this {
+  public once(event: string | symbol, listener: (...args: any[]) => void): this {
     this._wrapped.once(event, listener);
     return this;
   }
 
-  public prependListener(
-    event: string | symbol,
-    listener: (...args: any[]) => void
-  ): this {
+  public prependListener(event: string | symbol, listener: (...args: any[]) => void): this {
     this._wrapped.prependListener(event, listener);
     return this;
   }
 
-  public prependOnceListener(
-    event: string | symbol,
-    listener: (...args: any[]) => void
-  ): this {
+  public prependOnceListener(event: string | symbol, listener: (...args: any[]) => void): this {
     this._wrapped.prependOnceListener(event, listener);
     return this;
   }
 
-  public removeListener(
-    event: string | symbol,
-    listener: (...args: any[]) => void
-  ): this {
+  public removeListener(event: string | symbol, listener: (...args: any[]) => void): this {
     this._wrapped.removeListener(event, listener);
     return this;
   }
