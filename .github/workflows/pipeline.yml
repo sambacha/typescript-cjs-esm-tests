@@ -1,4 +1,4 @@
-# CI/CD Pipeline
+# CI/CD Release Workflow
 name: pipeline
 
 on:
@@ -8,13 +8,18 @@ on:
       - 'master'
     tags-ignore:
       - '*'
+env:
+  CI: ''
+  COMMIT_SHA: ${{ github.event.pull_request.head.sha }}
+  PULL_NUMBER: ${{ github.event.pull_request.number }}
+  RUN_ID: ${{ github.run_id }}
+  FORCE_COLOR: 2
+  NEXT_TELEMETRY_DISABLED: 1
+  NODE_ENV: production
 
-concurrency:
-  group: ci-tests-${{ github.ref }}-1
-  cancel-in-progress: true
 
 jobs:
-  build:
+  pipeline:
     name: Node ${{ matrix.node-version }} on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
 
@@ -55,26 +60,33 @@ jobs:
         run: npm pack
         id: pack
 
-      - run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+      - name: Set output info
+        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
 
-      - uses: 'marvinpinto/action-automatic-releases@latest'
+      - name: Create automatic release
+        uses: 'marvinpinto/action-automatic-releases@latest'
+        if: ${{ github.event_name == 'push'}}
         with:
           repo_token: '${{ secrets.GITHUB_TOKEN }}'
           automatic_release_tag: 'latest'
           prerelease: true
           files: |
             LICENSE.md
-            packages/**/*.tgz
+            **.tgz
         id: 'automatic_releases'
 
 
   release:
-    if: startsWith(github.ref, 'refs/tags/')
+#    if: startsWith(github.ref, 'refs/tags/')
+
+    if: ${{ github.event_name == 'create' && github.event.ref_type == 'tag' }}
+
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-
+    
+      - run: echo "Deploying tag ${{ github.ref }}" ;
       - name: "Build Changelog"
         id: github_release
         uses: mikepenz/release-changelog-builder-action@v3
