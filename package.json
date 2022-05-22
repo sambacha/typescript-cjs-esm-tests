@@ -1,7 +1,7 @@
 {
-  "name": "stdlib",
+  "name": "ts-module-mock",
   "version": "1.0.0",
-  "description": "",
+  "description": "typescript cjs and esm module library mockup",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
   "exports": {
@@ -17,13 +17,15 @@
     "src"
   ],
   "scripts": {
+    "build": "NODE_ENV=production npx rollup -c rollup.config.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "explain": "npx tsc --explainFiles > explanation.txt",
     "compile": "npx rollup -c rollup.config.js"
   },
   "keywords": [],
-  "author": "sam bacha",
-  "license": "ISC",
+  "author": "Sam Bacha",
+  "license": "ISC OR APACHE-2.0",
+  "dependencies":{},
   "devDependencies": {
     "@babel/core": "^7.17.10",
     "@babel/plugin-proposal-class-properties": "^7.16.7",
