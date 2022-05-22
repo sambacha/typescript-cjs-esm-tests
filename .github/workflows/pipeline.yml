@@ -11,7 +11,6 @@ on:
     branches:
       - 'master'
 env:
-  CI: ''
   COMMIT_SHA: ${{ github.event.pull_request.head.sha }}
   PULL_NUMBER: ${{ github.event.pull_request.number }}
   RUN_ID: ${{ github.run_id }}
@@ -76,9 +75,9 @@ jobs:
 
 
   release:
-#    if: startsWith(github.ref, 'refs/tags/')
+    if: startsWith(github.ref, 'refs/tags/')
 
-    if: ${{ github.event_name == 'create' && github.event.ref_type == 'tag' }}
+#    if: ${{ github.event_name == 'create' && github.event.ref_type == 'tag' }}
 
     runs-on: ubuntu-latest
     steps:
