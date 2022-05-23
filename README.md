@@ -427,3 +427,18 @@ In this usage, the type essentially is a no-op, and means nothing at all.
 In all other usages, [including in the `extends` clause of a generic type parameter](https://www.typescriptlang.org/play?#code/GYVwdgxgLglg9mABMOcA8AVRBTAHlbMAEwGdEBvAXwD4AKABwEMAnRgWwC5EMBKCygFACUcWlGYhsPANzDUtAIwy5oqspG0wIADbaZiAPQGcuetmjYiOZszjMBQA), it means "anything non-nullish".
 
 _Originally posted by @bradzacher in https://github.com/typescript-eslint/typescript-eslint/issues/2063#issuecomment-675156492_
+
+
+### `GenericObject`
+
+```typescript
+/**
+ * Helper to avoid writing `Record<string, unknown>` everywhere you would usually use "object".
+ *
+ * @example (data: GenericObject) => void
+ * @example variables: GenericObject<string>
+ *
+ * @see https://github.com/typescript-eslint/typescript-eslint/issues/2063#issuecomment-632833366
+ */
+export type GenericObject<T = unknown> = Record<string, T>;
+```
