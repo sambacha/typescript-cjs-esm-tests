@@ -326,3 +326,104 @@ export { MyComponent as default } from "./ManyComponents.js";
 import React, { lazy } from 'react';
 const MyComponent = lazy(() => import("./MyComponent.js"));
 ```
+
+
+## {} type
+
+> [Below is copied from this comment, see https://github.com/typescript-eslint/typescript-eslint/issues/2063#issuecomment-675156492](https://github.com/typescript-eslint/typescript-eslint/issues/2063#issuecomment-675156492)
+
+We will not be removing `{}` from the rule defaults, as it is an unsafe type because it doesn't work how people think it works, and in most cases it allows weakly typed code.
+
+---
+
+This is the exact reason that the rule bans the `{}` ***type***.
+It's a common misconception that the `{}` ***type*** is the same as the `{}` ***value***.
+But as the rule's message states: _this is not the case_!
+
+The ***type*** `{}` doesn't mean "any empty object", it means "any non-nullish value".
+
+This is obviously a huge type safety hole!
+
+For example - the following code is _completely type-check valid_, even though it might make no sense to be:
+
+```ts
+interface AAA {
+  aaa: {};
+}
+
+const x: AAA = { aaa: true };
+```
+[repl](https://www.typescriptlang.org/play/#code/JYOwLgpgTgZghgYwgAgILuQbwFDOXAgLiwF8BubE7bBAexAGcxkAPY9VZAXi3yOTBQArinLYgA)
+
+[It's also important to note that empty interfaces behave in exactly the same way as the `{}` type!](https://www.typescriptlang.org/play?#code/JYOwLgpgTgZghgYwgAgILuQbwFDOXAgLmQCEyBubAX21ElkRTJKxuwQHsQBnMZAD2LpUyALxZ8RZGCgBXFFUpA), which is why we have the [`no-empty-interface`](https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/no-empty-interface.md) lint rule.
+
+----
+
+Unfortunately, there's no _type_ in TS that means "an empty object".
+
+There are the following options for you:
+
+### If you want a type that means "empty object"
+
+You can use a type similar to this type.
+
+```ts
+type EmptyObject = Record<string, never>; // or {[k: string]: never}
+
+const a: EmptyObject = { a: 1 };  // expect error
+const b: EmptyObject = 1;         // expect error
+const c: EmptyObject = () => {};  // expect error
+const d: EmptyObject = null;      // expect error
+const e: EmptyObject = undefined; // expect error
+const f: EmptyObject = {};        // NO ERROR - as expected
+```
+[ts playground repl](https://www.typescriptlang.org/play?#code/C4TwDgpgBAogtmUB5ARgKwgY2FAvFAJSwHsAnAEwB4BnYUgSwDsBzAGikYgDcJSA+ANwAoIZmKNaUAIYAuWAmTosOfAG9pcgIxQAvgKhQA9IagQAHpGynSpMqPGSUc+IhCoMV-Jv0Hfv46YWyta2pPYSOJjOCm5KnlAAFACUeHxQqnoGAeaWOLyh4ZLk0a7uwfiMAK4ANtU+ftlBVvl2YhGmJYoeKlCVjOQQAGZMEOT6jbkhrQ44g52x3XjpmX7+JgBySLAEBEgEUAC00tSBuaNCQA)
+
+### If you are using React, and you want to define `type Props = {}`.
+
+This is ***technically*** safe in this instance, [because under the hood the `{}` type is passed into an intersection type](https://github.com/DefinitelyTyped/DefinitelyTyped/blob/6fd37a55773b23e00a19418d9b5aad912087c982/types/react/index.d.ts#L501) (see the note at the end of this comment for why this is safe).
+
+However, there is no way for us to statically analyse and know that this is a safe usage.
+To work around this, consider reconfiguring the lint rule to match your repository's coding style.
+You can use the following config to allow it:
+
+```json
+{
+  "rules": {
+    "@typescript-eslint/ban-types": [
+      "error",
+      {
+        "extendDefaults": true,
+        "types": {
+          "{}": false
+        }
+      }
+    ]
+  }
+}
+```
+
+Consider using [an eslint overrides config](https://eslint.org/docs/user-guide/configuring#configuration-based-on-glob-patterns) to limit the scope of this change to just react component files, to help ensure you're keeping your codebase as safe as possible.
+
+----
+
+As an aside - it's worth noting that `{}` is a very weird anomaly in TypeScript, because there is just one case where it actually does mean something akin to "empty object"; in an intersection type.
+
+```ts
+type T1 = { a: 1 } & {};
+const t11: T1 = { a: 1 };
+const t12: T1 = true; // expected error
+
+type T2 = true & {};
+const t21: T2 = true;
+const t22: T2 = false; // expected error
+const t23: T2 = {}; // expected error
+
+```
+[repl](https://www.typescriptlang.org/play?#code/C4TwDgpgBAKgjFAvFA3lAhgLiggvlAMlVwG4AoAYwHsA7AZ2CmDjm3iVQ2z3OvseYAmNgmTAATgFcIJKAHo5UCAA9IFYBAAmS8eKriyZUJFiCOE6YWK9aDJoNanzUmZVsDBwp8gBm6ADZ0MvKKKmoa2hC6+m789gDMbGbIKKQhSqoQ6lo6egZAA)
+
+In this usage, the type essentially is a no-op, and means nothing at all.
+
+In all other usages, [including in the `extends` clause of a generic type parameter](https://www.typescriptlang.org/play?#code/GYVwdgxgLglg9mABMOcA8AVRBTAHlbMAEwGdEBvAXwD4AKABwEMAnRgWwC5EMBKCygFACUcWlGYhsPANzDUtAIwy5oqspG0wIADbaZiAPQGcuetmjYiOZszjMBQA), it means "anything non-nullish".
+
+_Originally posted by @bradzacher in https://github.com/typescript-eslint/typescript-eslint/issues/2063#issuecomment-675156492_
