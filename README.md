@@ -23,6 +23,63 @@
 
 Testing best way to support cjs and esm and how to structure project to enable that (see results.txt for more info)
 
+## TLDR
+
+```javascript
+(?<=(?:(?:import|require)\(|(?:import(?:\s|.)*from))\s*(?:\"|\'))(.*)(?=\"|\')
+```
+```javascript
+// test file for regex above
+import("./module")
+import('./module')
+require("./module")
+require('./module')
+import * as Namespace from "./module"
+import Namespace from "./module"
+import { variableOne } from "./module"
+import { variableOne, variableTwo } from "./module"
+import { 
+  variableOne,
+  variableTwo,
+} from "./module"
+import { variable as somethingElse } from "./module"
+```
+
+```javascript
+// code generated 
+const regex = /(?<=(?:(?:import|require)\(|(?:import(?:\s|.)*from))\s*(?:\"|\'))(.*)(?=\"|\')/gm;
+
+// Alternative syntax using RegExp constructor
+// const regex = new RegExp('(?<=(?:(?:import|require)\\(|(?:import(?:\\s|.)*from))\\s*(?:\\"|\\\'))(.*)(?=\\"|\\\')', 'gm')
+
+const str = `import("./module")
+import('./module')
+require("./module")
+require('./module')
+import * as Namespace from "./module"
+import Namespace from "./module"
+import { variableOne } from "./module"
+import { variableOne, variableTwo } from "./module"
+import { 
+  variableOne,
+  variableTwo,
+} from "./module"
+import { variable as somethingElse } from "./module"
+`;
+let m;
+
+while ((m = regex.exec(str)) !== null) {
+    // This is necessary to avoid infinite loops with zero-width matches
+    if (m.index === regex.lastIndex) {
+        regex.lastIndex++;
+    }
+    
+    // The result can be accessed through the `m`-variable.
+    m.forEach((match, groupIndex) => {
+        console.log(`Found match, group ${groupIndex}: ${match}`);
+    });
+}
+```
 
 ## Avoid Default Exports and Prefer Named Exports
 
