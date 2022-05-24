@@ -1,14 +1,17 @@
 # `std.module.format` 
 
+> version 0.1.0
+
 - [`std.module.format`](#-stdmoduleformat-)
   * [Overview](#overview)
-  * [Patterns: Prefer Named Exports](#avoid-default-exports-and-prefer-named-exports)
+  * [TLDR](#tldr)
+  * [Avoid Default Exports and Prefer Named Exports](#avoid-default-exports-and-prefer-named-exports)
     + [Context](#context)
     + [Summary](#summary)
-  * [File Extenstions](#decision)
+  * [Decision](#decision)
     + [ECMAScript Module Support in Node.js](#ecmascript-module-support-in-nodejs)
     + [`.mjs`, `.cjs`, == `.mts`, `.cts` && `.d.mts` and `.d.cts`.](#-mjs----cjs-------mts----cts------dmts--and--dcts-)
-  * [Anti-Patterns: Avoid Export Default](#avoid-export-default)
+  * [Avoid Export Default](#avoid-export-default)
     + [Poor Discoverability](#poor-discoverability)
     + [Autocomplete](#autocomplete)
     + [CommonJS interop](#commonjs-interop)
@@ -17,6 +20,12 @@
     + [Re-exporting](#re-exporting)
     + [Dynamic Imports](#dynamic-imports)
     + [Needs two lines for non-class / non-function](#needs-two-lines-for-non-class---non-function)
+    + [React.js - Named Exports](#reactjs---named-exports)
+  * [{} type](#---type)
+    + [If you want a type that means "empty object"](#if-you-want-a-type-that-means--empty-object-)
+    + [If you are using React, and you want to define `type Props = {}`.](#if-you-are-using-react--and-you-want-to-define--type-props------)
+    + [`GenericObject`](#-genericobject-)
+    + [Module-related host hooks](#module-related-host-hooks)
 
 ## Overview
 
@@ -442,3 +451,121 @@ _Originally posted by @bradzacher in https://github.com/typescript-eslint/typesc
  */
 export type GenericObject<T = unknown> = Record<string, T>;
 ```
+
+###  Module-related host hooks
+
+> [source, https://html.spec.whatwg.org/multipage/webappapis.html#integration-with-the-javascript-module-system](https://html.spec.whatwg.org/multipage/webappapis.html#integration-with-the-javascript-module-system)
+
+> NOTE. Although the JavaScript specification speaks in terms of "scripts" versus "modules", in general this specification speaks in terms of classic scripts versus module scripts, since both of them use the script element.
+
+The JavaScript specification defines a syntax for modules, as well as some host-agnostic parts of their processing model. This specification defines the rest of their processing model: how the module system is bootstrapped, via the `[script](https://html.spec.whatwg.org/multipage/scripting.html#the-script-element)` element with `[type](https://html.spec.whatwg.org/multipage/scripting.html#attr-script-type)` attribute set to "`module`", and how modules are fetched, resolved, and executed. [\[JAVASCRIPT\]](https://html.spec.whatwg.org/multipage/references.html#refsJAVASCRIPT)
+
+Although the JavaScript specification speaks in terms of "scripts" versus "modules", in general this specification speaks in terms of [classic scripts](https://html.spec.whatwg.org/multipage/webappapis.html#classic-script) versus [module scripts](https://html.spec.whatwg.org/multipage/webappapis.html#module-script), since both of them use the `[script](https://html.spec.whatwg.org/multipage/scripting.html#the-script-element)` element.
+
+`modulePromise = [import(specifier)](https://tc39.es/ecma262/#sec-import-calls)`
+
+Returns a promise for the module namespace object for the [module script](https://html.spec.whatwg.org/multipage/webappapis.html#module-script) identified by specifier. This allows dynamic importing of module scripts at runtime, instead of statically using the `import` statement form. The specifier will be [resolved](https://html.spec.whatwg.org/multipage/webappapis.html#resolve-a-module-specifier) relative to the [active script](https://html.spec.whatwg.org/multipage/webappapis.html#active-script)'s [base URL](https://html.spec.whatwg.org/multipage/webappapis.html#concept-script-base-url).
+
+The returned promise will be rejected if an invalid specifier is given, or if a failure is encountered while [fetching](https://html.spec.whatwg.org/multipage/webappapis.html#fetch-an-import()-module-script-graph) or [evaluating](https://html.spec.whatwg.org/multipage/webappapis.html#run-a-module-script) the resulting module graph.
+
+This syntax can be used inside both [classic](https://html.spec.whatwg.org/multipage/webappapis.html#classic-script) and [module scripts](https://html.spec.whatwg.org/multipage/webappapis.html#module-script). It thus provides a bridge into the module-script world, from the classic-script world.
+
+`url = [import.meta](https://tc39.es/ecma262/#sec-meta-properties) .url`
+
+Returns the [active module script](https://html.spec.whatwg.org/multipage/webappapis.html#active-script)'s [base URL](https://html.spec.whatwg.org/multipage/webappapis.html#concept-script-base-url).
+
+This syntax can only be used inside [module scripts](https://html.spec.whatwg.org/multipage/webappapis.html#module-script).
+
+A module map is a [map](https://infra.spec.whatwg.org/#ordered-map) keyed by [tuples](https://infra.spec.whatwg.org/#tuple) consisting of a [URL record](https://url.spec.whatwg.org/#concept-url) and a [string](https://infra.spec.whatwg.org/#string). The [URL record](https://url.spec.whatwg.org/#concept-url) is the [request URL](https://fetch.spec.whatwg.org/#concept-request-url) at which the module was fetched, and the [string](https://infra.spec.whatwg.org/#string) indicates the type of the module (e.g. "`javascript`"). The [module map](https://html.spec.whatwg.org/multipage/webappapis.html#module-map)'s values are either a [module script](https://html.spec.whatwg.org/multipage/webappapis.html#module-script), null (used to represent failed fetches), or a placeholder value "`fetching`". [Module maps](https://html.spec.whatwg.org/multipage/webappapis.html#module-map) are used to ensure that imported module scripts are only fetched, parsed, and evaluated once per `[Document](https://html.spec.whatwg.org/multipage/dom.html#document)` or [worker](https://html.spec.whatwg.org/multipage/workers.html#workers).
+
+Since [module maps](https://html.spec.whatwg.org/multipage/webappapis.html#module-map) are keyed by (URL, module type), the following code will create three separate entries in the [module map](https://html.spec.whatwg.org/multipage/webappapis.html#module-map), since it results in three different (URL, module type) [tuples](https://infra.spec.whatwg.org/#tuple) (all with "`javascript`" type):
+
+```
+import "https://example.com/module.mjs";
+import "https://example.com/module.mjs#map-buster";
+import "https://example.com/module.mjs?debug=true";
+```
+
+That is, URL [queries](https://url.spec.whatwg.org/#concept-url-query) and [fragments](https://url.spec.whatwg.org/#concept-url-fragment) can be varied to create distinct entries in the [module map](https://html.spec.whatwg.org/multipage/webappapis.html#module-map); they are not ignored. Thus, three separate fetches and three separate module evaluations will be performed.
+
+In contrast, the following code would only create a single entry in the [module map](https://html.spec.whatwg.org/multipage/webappapis.html#module-map), since after applying the [URL parser](https://url.spec.whatwg.org/#concept-url-parser) to these inputs, the resulting [URL records](https://url.spec.whatwg.org/#concept-url) are equal:
+
+```
+import "https://example.com/module2.mjs";
+import "https:example.com/module2.mjs";
+import "https://///example.com\\module2.mjs";
+import "https://example.com/foo/../module2.mjs";
+```
+
+So in this second example, only one fetch and one module evaluation will occur.
+
+Note that this behavior is the same as how [shared workers](https://html.spec.whatwg.org/multipage/workers.html#sharedworker) are keyed by their parsed [constructor url](https://html.spec.whatwg.org/multipage/workers.html#concept-sharedworkerglobalscope-constructor-url).
+
+Since module type is also part of the [module map](https://html.spec.whatwg.org/multipage/webappapis.html#module-map) key, the following code will create two separate entries in the [module map](https://html.spec.whatwg.org/multipage/webappapis.html#module-map) (the type is "`javascript`" for the first, and "`css`" for the second):
+
+```
+<script type=module>
+  import "https://example.com/module";
+</script>
+<script type=module>
+  import "https://example.com/module" assert { type: "css" };
+</script>
+```
+
+This can result in two separate fetches and two separate module evaluations being performed. This is a [willful violation](https://html.spec.whatwg.org/multipage/introduction.html#willful-violation) of a constraint recommended (but not required) by the import assertions specification stating that each call to [HostResolveImportedModule](https://html.spec.whatwg.org/multipage/webappapis.html#hostresolveimportedmodule(referencingscriptormodule,-modulerequest)) with the same (referencingScriptOrModule, moduleRequest.\[\[Specifier\]\]) pair must return the same [Module Record](https://tc39.es/ecma262/#sec-source-text-module-records). [\[JSIMPORTASSERTIONS\]](https://html.spec.whatwg.org/multipage/references.html#refsJSIMPORTASSERTIONS)
+
+In practice, due to the as-yet-unspecified memory cache (see issue [#6110](https://github.com/whatwg/html/issues/6110)) the resource may only be fetched once in WebKit and Blink-based browsers. Additionally, as long as all module types are mutually exclusive, the module type check in [fetch a single module script](https://html.spec.whatwg.org/multipage/webappapis.html#fetch-a-single-module-script) will fail for at least one of the imports, so at most one module evaluation will occur.
+
+The purpose of including the type in the [module map](https://html.spec.whatwg.org/multipage/webappapis.html#module-map) key is so that an import with the wrong type assertion does not prevent a different import of the same specifier but with the correct type from succeeding.
+
+JavaScript module scripts are the default import type when importing from another JavaScript module; that is, when an `import` statement lacks a `type` import assertion the imported module script's type will be JavaScript. Attempting to import a JavaScript resource using an `import` statement with a `type` import assertion will fail:
+
+```
+<script type="module">
+    // All of the following will fail, assuming that the imported .mjs files are served with a
+    // JavaScript MIME type. JavaScript module scripts are the default and cannot be imported with
+    // any import type assertion.
+    import foo from "./foo.mjs" assert { type: "javascript" };
+    import foo2 from "./foo2.mjs" assert { type: "js" };
+    import foo3 from "./foo3.mjs" assert { type: "" };
+    await import("./foo4.mjs", { assert: { type: null } });
+    await import("./foo5.mjs", { assert: { type: undefined } });
+</script>
+```
+
+To resolve a module specifier given a [URL](https://url.spec.whatwg.org/#concept-url) base URL and a [string](https://infra.spec.whatwg.org/#string) specifier, perform the following steps. It will return either a [URL record](https://url.spec.whatwg.org/#concept-url) or failure.
+
+1.  Apply the [URL parser](https://url.spec.whatwg.org/#concept-url-parser) to specifier. If the result is not failure, return the result.
+    
+2.  If specifier does not start with the character U+002F SOLIDUS (`/`), the two-character sequence U+002E FULL STOP, U+002F SOLIDUS (`./`), or the three-character sequence U+002E FULL STOP, U+002E FULL STOP, U+002F SOLIDUS (`../`), return failure.
+    
+    This restriction is in place so that in the future we can allow custom module loaders to give special meaning to "bare" import specifiers, like `import "jquery"` or `import "web/crypto"`. For now any such imports will fail, instead of being treated as relative URLs.
+    
+3.  Return the result of applying the [URL parser](https://url.spec.whatwg.org/#concept-url-parser) to specifier with base URL.
+    
+
+The following are valid module specifiers according to the above algorithm:
+
+-   `https://example.com/apples.mjs`
+-   `http:example.com\pears.js` (becomes `http://example.com/pears.js` as step 1 parses with no base URL)
+-   `//example.com/bananas`
+-   `./strawberries.mjs.cgi`
+-   `../lychees`
+-   `/limes.jsx`
+-   `data:text/javascript,export default 'grapes';`
+-   `blob:https://whatwg.org/d0360e2f-caee-469f-9a2f-87d5b0456f6f`
+
+The following are valid module specifiers according to the above algorithm, but will invariably cause failures when they are [fetched](https://html.spec.whatwg.org/multipage/webappapis.html#fetch-a-single-module-script):
+
+-   `javascript:export default 'artichokes';`
+-   `data:text/plain,export default 'kale';`
+-   `about:legumes`
+-   `wss://example.com/celery`
+
+The following are not valid module specifiers according to the above algorithm:
+
+-   `https://eggplant:b/c`
+-   `pumpkins.js`
+-   `.tomato`
+-   `..zucchini.mjs`
+-   `.\yam.es`
