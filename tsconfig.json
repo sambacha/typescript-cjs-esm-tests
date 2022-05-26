@@ -35,4 +35,9 @@
   },
   "include": ["src/**/*.ts"],
   "exclude": ["**/node_modules", "**/.*/"],
+   "plugins": [
+      {
+        "name": "typescript-eslint-language-service"
+      }
+   ]
 }
