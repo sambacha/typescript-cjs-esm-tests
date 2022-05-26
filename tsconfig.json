@@ -4,6 +4,8 @@
     "indentSize": 2
   },
   "compilerOptions": {
+    "preserveConstEnums": true,
+     "removeComments": true,
     "allowSyntheticDefaultImports": false,
     "esModuleInterop": false,
     "preserveValueImports": true,
