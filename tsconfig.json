@@ -2,23 +2,36 @@
   "compilerOptions": {
     "allowSyntheticDefaultImports": false,
     "esModuleInterop": false,
+    "forceConsistentCasingInFileNames": true,
+    "noFallthroughCasesInSwitch": true,
+    "removeComments": true,
+    "incremental": true,
+    "tsBuildInfoFile": "./",
     "preserveValueImports": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowUnreachableCode": false,
-    "strictFunctionTypes": true, 
+    "strictPropertyInitialization": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
     "isolatedModules": true,
     "declaration": true,
     "sourceMap": false,
     "module": "ES2020",
     "moduleResolution": "node",
     "target": "ESNext",
-    "rootDir": "src",
-    "outDir": "dist",
-    "types" : ["@types/node/events"]
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "types": [
+      "@types/node/events"
+    ]
   },
   "include": [
-    "src"
+    "src/**/*.ts"
   ],
-  "exclude": ["**/node_modules", "**/.*/"],
+  "exclude": [
+    "**/node_modules",
+    "**/.*/",
+    "src/**/*.test.ts"
+  ]
 }
