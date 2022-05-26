@@ -1,6 +1,6 @@
 # `std.module.format` 
 
-> version 0.1.0
+> version 0.1.1
 
 - [`std.module.format`](#-stdmoduleformat-)
   * [Overview](#overview)
@@ -19,13 +19,18 @@
     + [TypeScript auto-import](#typescript-auto-import)
     + [Re-exporting](#re-exporting)
     + [Dynamic Imports](#dynamic-imports)
+    + [ES Module Interop](#es-module-interop)
+        * [Note](#note)
     + [Needs two lines for non-class / non-function](#needs-two-lines-for-non-class---non-function)
     + [React.js - Named Exports](#reactjs---named-exports)
-  * [{} type](#---type)
+  * [The {} type](#---type)
     + [If you want a type that means "empty object"](#if-you-want-a-type-that-means--empty-object-)
     + [If you are using React, and you want to define `type Props = {}`.](#if-you-are-using-react--and-you-want-to-define--type-props------)
     + [`GenericObject`](#-genericobject-)
     + [Module-related host hooks](#module-related-host-hooks)
+
+<small><i><a href='#'>This is a work in progress</a></i></small>
+
 
 ## Overview
 
@@ -281,6 +286,30 @@ const {HighCharts} \= await import('https://code.highcharts.com/js/es-modules/ma
 HighCharts.chart('container', { ... }); // Notice \`.default\`
 ```
 
+### ES Module Interop
+
+
+> [esModuleInterop, https://www.typescriptlang.org/tsconfig#esModuleInterop](https://www.typescriptlang.org/tsconfig#esModuleInterop)
+
+By default (with esModuleInterop false or not set) TypeScript treats CommonJS/AMD/UMD modules similar to ES6 modules. In doing this, there are two parts in particular which turned out to be flawed assumptions:
+
+a namespace import like `import * as moment from "moment"` acts the same as `const moment = require("moment")`
+
+a default import like `import moment from "moment"` acts the same as `const moment = require("moment").default`
+
+This mis-match causes these two issues:
+
+- the ES6 modules spec states that a namespace import (import * as x) can only be an object, by having TypeScript treating it the same as = require("x") then TypeScript allowed for the import to be treated as a function and be callable. That’s not valid according to the spec.
+
+- while accurate to the ES6 modules spec, most libraries with CommonJS/AMD/UMD modules didn’t conform as strictly as TypeScript’s implementation.
+
+
+##### Note
+
+The namespace import `import * as fs from "fs"` only accounts for properties which are **owned** (basically properties set on the object and not via the prototype chain) on the imported object. If the module you’re importing defines its API using inherited properties, you need to use the default import form (`import fs from "fs"`), or *disable esModuleInterop*.
+
+
+
 ### Needs two lines for non-class / non-function
 
 Can be one statement for function / class e.g.
@@ -336,14 +365,12 @@ import React, { lazy } from 'react';
 const MyComponent = lazy(() => import("./MyComponent.js"));
 ```
 
-
 ## {} type
 
 > [Below is copied from this comment, see https://github.com/typescript-eslint/typescript-eslint/issues/2063#issuecomment-675156492](https://github.com/typescript-eslint/typescript-eslint/issues/2063#issuecomment-675156492)
 
 We will not be removing `{}` from the rule defaults, as it is an unsafe type because it doesn't work how people think it works, and in most cases it allows weakly typed code.
 
----
 
 This is the exact reason that the rule bans the `{}` ***type***.
 It's a common misconception that the `{}` ***type*** is the same as the `{}` ***value***.
@@ -355,7 +382,7 @@ This is obviously a huge type safety hole!
 
 For example - the following code is _completely type-check valid_, even though it might make no sense to be:
 
-```ts
+```typescript
 interface AAA {
   aaa: {};
 }
@@ -376,7 +403,7 @@ There are the following options for you:
 
 You can use a type similar to this type.
 
-```ts
+```typescript
 type EmptyObject = Record<string, never>; // or {[k: string]: never}
 
 const a: EmptyObject = { a: 1 };  // expect error
@@ -414,11 +441,9 @@ You can use the following config to allow it:
 
 Consider using [an eslint overrides config](https://eslint.org/docs/user-guide/configuring#configuration-based-on-glob-patterns) to limit the scope of this change to just react component files, to help ensure you're keeping your codebase as safe as possible.
 
-----
-
 As an aside - it's worth noting that `{}` is a very weird anomaly in TypeScript, because there is just one case where it actually does mean something akin to "empty object"; in an intersection type.
 
-```ts
+```typescript
 type T1 = { a: 1 } & {};
 const t11: T1 = { a: 1 };
 const t12: T1 = true; // expected error
@@ -480,7 +505,7 @@ A module map is a [map](https://infra.spec.whatwg.org/#ordered-map) keyed by [tu
 
 Since [module maps](https://html.spec.whatwg.org/multipage/webappapis.html#module-map) are keyed by (URL, module type), the following code will create three separate entries in the [module map](https://html.spec.whatwg.org/multipage/webappapis.html#module-map), since it results in three different (URL, module type) [tuples](https://infra.spec.whatwg.org/#tuple) (all with "`javascript`" type):
 
-```
+```typescript
 import "https://example.com/module.mjs";
 import "https://example.com/module.mjs#map-buster";
 import "https://example.com/module.mjs?debug=true";
@@ -490,7 +515,7 @@ That is, URL [queries](https://url.spec.whatwg.org/#concept-url-query) and [frag
 
 In contrast, the following code would only create a single entry in the [module map](https://html.spec.whatwg.org/multipage/webappapis.html#module-map), since after applying the [URL parser](https://url.spec.whatwg.org/#concept-url-parser) to these inputs, the resulting [URL records](https://url.spec.whatwg.org/#concept-url) are equal:
 
-```
+```typescript
 import "https://example.com/module2.mjs";
 import "https:example.com/module2.mjs";
 import "https://///example.com\\module2.mjs";
@@ -503,7 +528,7 @@ Note that this behavior is the same as how [shared workers](https://html.spec.wh
 
 Since module type is also part of the [module map](https://html.spec.whatwg.org/multipage/webappapis.html#module-map) key, the following code will create two separate entries in the [module map](https://html.spec.whatwg.org/multipage/webappapis.html#module-map) (the type is "`javascript`" for the first, and "`css`" for the second):
 
-```
+```html
 <script type=module>
   import "https://example.com/module";
 </script>
@@ -520,7 +545,7 @@ The purpose of including the type in the [module map](https://html.spec.whatwg.o
 
 JavaScript module scripts are the default import type when importing from another JavaScript module; that is, when an `import` statement lacks a `type` import assertion the imported module script's type will be JavaScript. Attempting to import a JavaScript resource using an `import` statement with a `type` import assertion will fail:
 
-```
+```html
 <script type="module">
     // All of the following will fail, assuming that the imported .mjs files are served with a
     // JavaScript MIME type. JavaScript module scripts are the default and cannot be imported with
@@ -569,3 +594,8 @@ The following are not valid module specifiers according to the above algorithm:
 -   `.tomato`
 -   `..zucchini.mjs`
 -   `.\yam.es`
+
+
+## License
+
+CC-SA-2.5
