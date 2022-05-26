@@ -1,4 +1,8 @@
 {
+  "formatCodeOptions": {
+    "tabSize": 2,
+    "indentSize": 2
+  },
   "compilerOptions": {
     "allowSyntheticDefaultImports": false,
     "esModuleInterop": false,
@@ -6,19 +10,27 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "allowUnreachableCode": false,
+    "strictBindCallApply": true,
+    "useUnknownInCatchVariables": true,
+    "strictPropertyInitialization": true,
+    "strictFunctionTypes": true,
+    "noUncheckedIndexedAccess": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
     "strictFunctionTypes": true, 
     "isolatedModules": true,
-    "declaration": true,
     "sourceMap": false,
     "module": "ES2020",
     "moduleResolution": "node",
     "target": "ESNext",
     "rootDir": "src",
     "outDir": "dist",
-    "types" : ["@types/node/events"]
+    "declaration": true,
+    "declarationDir": "types",
+    "types" : ["@types/node/events"],
+    "typeRoots": ["../../node_modules/@types", "./node_modules/@types", "./typings", "@types/json-schema"]
   },
-  "include": [
-    "src"
-  ],
+  "include": ["src/**/*.ts"],
   "exclude": ["**/node_modules", "**/.*/"],
 }
