@@ -1,6 +1,6 @@
 # `std.module.format` 
 
-> version 0.1.2
+> version 0.1.3
 
 - [`std.module.format`](#-stdmoduleformat-)
   * [Overview](#overview)
@@ -97,6 +97,43 @@ while ((m = regex.exec(str)) !== null) {
     });
 }
 ```
+
+### Cheatsheet
+
+```ts twoslash
+// import the entire object
+import json from './example.json'
+```
+
+```ts twoslash
+// import a root field as named exports - helps with tree-shaking!
+import { field } from './example.json'
+```
+
+Use the Type-Only Imports and Export syntax to avoid potential problems like type-only imports being incorrectly bundled. for example:
+
+```ts twoslash
+import type { T } from 'only/types'
+export type { T }
+```
+> [source, typescriptlang.org/docs/handbook/release-notes/typescript-3-8.html#type-only-imports-and-export](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-8.html#type-only-imports-and-export)
+
+#### Other Compiler Options Affecting the Build Result
+- `extends`   
+- `importsNotUsedAsValues`   
+- `preserveValueImports`   
+- `jsxFactory`   
+- `jsxFragmentFactory`   
+
+#### Suggested `tsconfig` values
+```json
+["useDefineForClassFields": true]
+```
+```json
+["isolatedModules": true]
+```
+
+> [source, vitejs developer guide: vitejs.dev/guide/features.html#typescript-compiler-options](https://vitejs.dev/guide/features.html#typescript-compiler-options)
 
 ## Avoid Default Exports and Prefer Named Exports
 
