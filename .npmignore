@@ -1,0 +1,7 @@
+# -*- mode: gitignore; -*-
+scripts/
+test/
+.github/
+.git/
+
+docs/

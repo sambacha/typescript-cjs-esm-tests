@@ -3,7 +3,8 @@
 * @spec expect
 */
 
-import SafeEventEmitter from '.';
+import { describe, expect, test } from '@jest/globals';
+import {SafeEventEmitter} from '../';
 
 describe('SafeEventEmitter', () => {
   it('can be constructed without error', () => {
