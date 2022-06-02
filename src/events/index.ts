@@ -122,7 +122,7 @@ function arrayClone<T> (arr: T[]): T[] {
 */
 
 /** @class SafeEventEmitter */
-export default class SafeEventEmitter extends EventEmitter {
+export class SafeEventEmitter extends EventEmitter {
   emit (type: string, ...args: any[]): boolean {
     let doError = type === 'error';
 
