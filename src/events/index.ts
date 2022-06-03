@@ -87,7 +87,7 @@ export class EventEmitterWrapper implements EventEmitter {
 }
 
 
-type Handler = (...args: any[]) => void;
+export type Handler = (...args: any[]) => void;
 interface EventMap {
   [k: string]: Handler | Handler[] | undefined;
 }
