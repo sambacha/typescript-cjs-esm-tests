@@ -1,17 +1,17 @@
 {
   "name": "ts-module-mock",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "typescript cjs and esm module library mockup",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
   "exports": {
     "./package.json": "./package.json",
-    ".": {
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs"
+    "./*": {
+      "import": "./dist/*.mjs",
+      "require": "./dist/*.cjs"
     }
   },
-  "typings": "dist/index.d.ts",
+  "typings": "./dist/index.d.ts",
   "files": [
     "dist",
     "src"
@@ -27,7 +27,7 @@
     "compile": "npx rollup -c rollup.config.js",
     "fmt": "npx prettier --config .prettierrc.js --write src/**/*.ts"
   },
-  "keywords": [],
+  "keywords": ["typescript modules", "esm modules", "commonjs modules", "isomorphic modules"],
   "author": "Sam Bacha",
   "license": "APACHE-2.0",
   "dependencies": {},
