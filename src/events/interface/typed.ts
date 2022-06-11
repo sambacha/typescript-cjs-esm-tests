@@ -1,12 +1,26 @@
+/**
+ * @export
+ * @interface Listener
+ * @template T
+ */
 export interface Listener<T> {
   (event: T): any;
 }
 
+/**
+ * @export
+ * @interface Disposable
+ */
 export interface Disposable {
-  dispose();
+  dispose(any?: any): void;
 }
 
-/** passes through events as they happen. You will not get events from before you start listening */
+/**
+ * @export
+ * @class TypedEvent
+ * @template T
+ * @summary  Passes through events as they happen. You will not get events from before you start listening 
+ */
 export class TypedEvent<T> {
   private listeners: Listener<T>[] = [];
   private listenersOncer: Listener<T>[] = [];

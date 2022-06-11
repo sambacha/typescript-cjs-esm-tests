@@ -1,1 +1,1 @@
-export * from './typed';
+export type { Disposable, Listener, TypedEvent } from './typed';
