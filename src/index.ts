@@ -4,7 +4,7 @@
  * @ssee {@link https://github.com/sambacha/typescript-cjs-esm-tests}
  */
 
-import './events/index.js'
+
 export * from './events/index.js'
 export { EventEmitterWrapper } from './events/events.js'
 export { SafeEventEmitter } from './events/events.js'
