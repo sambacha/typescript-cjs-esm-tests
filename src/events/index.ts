@@ -1,13 +1,15 @@
-/**
- * @package ts-module-mock
- * @license Apache-2.0
- * @ssee {@link https://github.com/sambacha/typescript-cjs-esm-tests}
- */
-
+/** @export EventEmitterWrapper  */
 import { EventEmitterWrapper } from './events.js';
 export { EventEmitterWrapper };
-export { SafeEventEmitter } from './events.js';
-export { IEvents } from './events.js';
+
+/** @export SafeEventEmitter  */
+import { SafeEventEmitter } from './events.js';
+export { SafeEventEmitter };
+
+/** @export IEvents  */
+import { IEvents } from './events.js';
+export { IEvents };
+
 export { safeApply } from './events.js';
 export { arrayClone } from './events.js';
 export type { Handler } from './events.js';
@@ -21,4 +23,3 @@ export * from './interface';
 export * from './interface/index.js';
 export * from './events.js';
 export type { Disposable, Listener, TypedEvent } from './interface/typed';
-///!
