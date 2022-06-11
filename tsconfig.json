@@ -1,4 +1,5 @@
 {
+  "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
     "allowSyntheticDefaultImports": false,
     "esModuleInterop": false,
@@ -17,8 +18,9 @@
     "isolatedModules": true,
     "declaration": true,
     "sourceMap": false,
-    "module": "ES2020",
-    "moduleResolution": "node",
+		"module": "node16",
+		"moduleResolution": "node16",
+		"moduleDetection": "force",
     "target": "ESNext",
     "rootDir": "./src",
     "outDir": "./dist",
