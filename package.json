@@ -1,6 +1,6 @@
 {
   "name": "ts-module-mock",
-  "version": "0.0.3",
+  "version": "0.1.4",
   "description": "typescript cjs and esm module library mockup",
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
