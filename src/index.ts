@@ -5,18 +5,18 @@
  */
 
 
-export * from './events/index.js'
-export { EventEmitterWrapper } from './events/events.js'
-export { SafeEventEmitter } from './events/events.js'
-export { IEvents } from './events/events.js'
-export { safeApply } from './events/events.js'
-export { arrayClone } from './events/events.js'
-export type { Handler } from './events/events.js'
+export * from './events/index'
+export { EventEmitterWrapper } from './events/events'
+export { SafeEventEmitter } from './events/events'
+export { IEvents } from './events/events'
+export { safeApply } from './events/events'
+export { arrayClone } from './events/events'
+export type { Handler } from './events/events'
 
 export * from './events/interface';
 export * from './events/interface/index';
-export * from './events/interface/typed.js';
-export * from './events/events.js';
+export * from './events/interface/typed';
+export * from './events/events';
 
 // test dist for events/index
 export * from './events';
