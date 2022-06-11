@@ -3,6 +3,7 @@
 * @spec expect
 */
 
+// @ts-ignore
 import { describe, expect, test } from '@jest/globals';
 import {SafeEventEmitter} from '../';
 
