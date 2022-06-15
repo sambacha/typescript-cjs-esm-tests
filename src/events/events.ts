@@ -222,3 +222,45 @@ export abstract class IEvents {
   public abstract off(event: string, listener: any): void;
   public abstract removeListener(event: string, listener: any): void;
 }
+
+/** 
+* Event Emitter (ish)
+* @implements EthersAbstractProvider
+*/
+
+export type BlockTag = string | number;
+
+export interface EventFilter {
+    address?: string;
+    topics?: Array<string | Array<string> | null>;
+}
+
+export interface Filter extends EventFilter {
+    fromBlock?: BlockTag,
+    toBlock?: BlockTag,
+}
+
+export interface FilterByBlockHash extends EventFilter {
+    blockHash?: string;
+}
+
+export type EventType = string | Array<string | Array<string>> | EventFilter | ForkEvent;
+
+export abstract class EthersAbstractProvider {
+  abstract on(eventName: EventType, listener: Listener): Provider;
+  abstract once(eventName: EventType, listener: Listener): Provider;
+  abstract emit(eventName: EventType, ...args: Array<any>): boolean
+  abstract listenerCount(eventName?: EventType): number;
+  abstract listeners(eventName?: EventType): Array<Listener>;
+  abstract off(eventName: EventType, listener?: Listener): Provider;
+  abstract removeAllListeners(eventName?: EventType): Provider;
+
+  // Alias for "on"
+  addListener(eventName: EventType, listener: Listener): Provider {
+      return this.on(eventName, listener);
+  }
+
+  // Alias for "off"
+  removeListener(eventName: EventType, listener: Listener): Provider {
+      return this.off(eventName, listener);
+  }
