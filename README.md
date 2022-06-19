@@ -35,10 +35,28 @@
 <small><i><a href='#'>This is a work in progress</a></i></small>
 
 
-## Overview
+## Motivation
+
+Establishing the best way to support cjs and esm and how to structure project to enable that (see results.txt for more info)
+
+### Opt in compiler options
+
+**disable** the following compiler options:
+
+`esModuleInterop`: `false`
+`allowSyntheticDefaultImports`: `false`
 
 
-Testing best way to support cjs and esm and how to structure project to enable that (see results.txt for more info)
+The two flags `esModuleInterop` and `allowSyntheticDefaultImports` enable interoperation between ES Modules and CommonJS, AMD, and UMD modules for emit from TypeScript and type resolution by TypeScript respectively. 
+
+Unfortunately these options are viral: **enabling them in a package requires all downstream consumers to enable them as well** .  The TLDR is due to the way CommonJS and ES Modules interoperate with bundlers (Webpack, Parcel, etc.). 
+
+### Solution
+
+ set both `allowSyntheticDefaultImports` and `esModuleInterop` to `false`. 
+
+Consumers can now opt into these semantics, it also does not require them to do so. 
+Consumers **can always safely use alternative import syntaxes (including falling back to require() and import()),** or can enable these flags and opt into this behavior themselves.
 
 ## TLDR
 
