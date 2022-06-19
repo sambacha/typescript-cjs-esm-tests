@@ -18,16 +18,13 @@
     "isolatedModules": true,
     "declaration": true,
     "sourceMap": false,
-		"module": "node16",
-		"moduleResolution": "node16",
-		"moduleDetection": "force",
+    "module": "node16",
+    "moduleResolution": "node16",
+    "moduleDetection": "force",
     "target": "ESNext",
     "rootDir": "./src",
     "outDir": "./dist",
-    "types": [
-      "@types/node/events",
-      "@types/jest"
-    ],
+    "types": [],
     "plugins": [
       {
         "name": "typescript-eslint-language-service"
