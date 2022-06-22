@@ -1,3 +1,5 @@
+/// <reference types="node" />
+
 /** @export EventEmitterWrapper  */
 import { EventEmitterWrapper } from './events';
 export { EventEmitterWrapper };
