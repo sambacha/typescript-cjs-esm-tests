@@ -27,21 +27,15 @@ export * from './events';
 export type { Disposable, Listener, TypedEvent } from './interface/typed';
 
 
-export type Encoding = BufferEncoding | 'buffer' | null
+/* export type Encoding = BufferEncoding | 'buffer' | null */
 
-interface Writable extends EventEmitter {
+interface Writable extends EventEmitterWrapper {
   end(): any
   write(chunk: any, ...args: any[]): any
 }
 
-interface Readable extends EventEmitter {
+interface Readable extends EventEmitterWrapper {
   pause(): any
   resume(): any
   pipe(): any
-}
-
-interface Pipe<R, W> {
-  src: Minipass<R, W>
-  dest: Writable
-  opts: PipeOptions
-}
+};
