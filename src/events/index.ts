@@ -1,3 +1,5 @@
+/// <reference types="node" />
+
 /** @export EventEmitterWrapper  */
 import { EventEmitterWrapper } from './events';
 export { EventEmitterWrapper };
@@ -23,3 +25,17 @@ export * from './interface';
 export * from './interface/index';
 export * from './events';
 export type { Disposable, Listener, TypedEvent } from './interface/typed';
+
+
+/* export type Encoding = BufferEncoding | 'buffer' | null */
+
+interface Writable extends EventEmitterWrapper {
+  end(): any
+  write(chunk: any, ...args: any[]): any
+}
+
+interface Readable extends EventEmitterWrapper {
+  pause(): any
+  resume(): any
+  pipe(): any
+};
