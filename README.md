@@ -1,6 +1,6 @@
 # `std.module.format` 
 
-> version 0.1.3
+> version 0.1.5
 
 - [`std.module.format`](#-stdmoduleformat-)
   * [Overview](#overview)
@@ -43,9 +43,11 @@ Establishing the best way to support cjs and esm and how to structure project to
 
 **disable** the following compiler options:
 
-`esModuleInterop`: `false`
-`allowSyntheticDefaultImports`: `false`
-
+> `tsconfig.json`
+```jsonc
+"esModuleInterop": false,
+"allowSyntheticDefaultImports": false
+```
 
 The two flags `esModuleInterop` and `allowSyntheticDefaultImports` enable interoperation between ES Modules and CommonJS, AMD, and UMD modules for emit from TypeScript and type resolution by TypeScript respectively. 
 
@@ -53,10 +55,61 @@ Unfortunately these options are viral: **enabling them in a package requires all
 
 ### Solution
 
- set both `allowSyntheticDefaultImports` and `esModuleInterop` to `false`. 
+>**Warning**   
+> setting both `allowSyntheticDefaultImports` and `esModuleInterop` to `false` may break your build.
 
 Consumers can now opt into these semantics, it also does not require them to do so. 
 Consumers **can always safely use alternative import syntaxes (including falling back to require() and import()),** or can enable these flags and opt into this behavior themselves.
+
+#### Other Compiler Options Affecting the Build Result
+
+- `extends`   
+- `importsNotUsedAsValues`   
+- `preserveValueImports`   
+- `jsxFactory`   
+- `jsxFragmentFactory`   
+
+#### Suggested `tsconfig` values
+
+```jsonc
+"useDefineForClassFields": true,
+```
+```jsonc
+"isolatedModules": true,
+```
+
+> [source, vitejs developer guide: vitejs.dev/guide/features.html#typescript-compiler-options](https://vitejs.dev/guide/features.html#typescript-compiler-options)
+
+## Side by Side Compare
+
+### node:assert
+
+>**Note**    
+>[See the NodeJs Assertion Documentation for more information](https://nodejs.org/api/assert.html#assert)
+    
+#### Modern
+
+```typescript
+import { strict as assert } from 'node:assert'; // ESM
+const assert = require('node:assert').strict;   // CJS
+```
+    
+```typescript
+import assert from 'node:assert/strict';       // ESM
+const assert = require('node:assert/strict');  // CJS
+```
+    
+```typescript
+import { strict as assert } from 'node:assert'; // ESM
+const assert = require('node:assert/strict');   // CJS
+```
+    
+#### Legacy
+   
+```typescript
+import assert from 'node:assert';      // ESM
+const assert = require('node:assert'); // CJS
+```
 
 ## TLDR
 
@@ -135,23 +188,6 @@ import type { T } from 'only/types'
 export type { T }
 ```
 > [source, typescriptlang.org/docs/handbook/release-notes/typescript-3-8.html#type-only-imports-and-export](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-8.html#type-only-imports-and-export)
-
-#### Other Compiler Options Affecting the Build Result
-- `extends`   
-- `importsNotUsedAsValues`   
-- `preserveValueImports`   
-- `jsxFactory`   
-- `jsxFragmentFactory`   
-
-#### Suggested `tsconfig` values
-```json
-["useDefineForClassFields": true]
-```
-```json
-["isolatedModules": true]
-```
-
-> [source, vitejs developer guide: vitejs.dev/guide/features.html#typescript-compiler-options](https://vitejs.dev/guide/features.html#typescript-compiler-options)
 
 ## Avoid Default Exports and Prefer Named Exports
 
