@@ -1,42 +1,51 @@
 {
-  "$schema": "https://json.schemastore.org/tsconfig",
-  "compilerOptions": {
-    "allowSyntheticDefaultImports": false,
-    "esModuleInterop": false,
-    "forceConsistentCasingInFileNames": true,
-    "noFallthroughCasesInSwitch": true,
-    "removeComments": true,
-    "incremental": true,
-    "tsBuildInfoFile": "./",
-    "preserveValueImports": true,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
+	"$schema": "https://json.schemastore.org/tsconfig",
+	"formatCodeOptions": {
+		"tabSize": 2,
+		"indentSize": 2
+	},
+	"compilerOptions": {
+		"allowSyntheticDefaultImports": false,
     "allowUnreachableCode": false,
+		"esModuleInterop": false,
+		"tsBuildInfoFile": "./",
+    "forceConsistentCasingInFileNames": true,
     "strictPropertyInitialization": true,
+    "noFallthroughCasesInSwitch": true,
+    "useUnknownInCatchVariables": true,
+		"noUncheckedIndexedAccess": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "preserveValueImports": true,
+    "strictBindCallApply": true,
+		"strictFunctionTypes": true,
+		"noUnusedParameters": true,
+		"noImplicitReturns": true,
     "strictNullChecks": true,
-    "strictFunctionTypes": true,
-    "isolatedModules": true,
-    "declaration": true,
-    "sourceMap": false,
-    "module": "node16",
+		"isolatedModules": true,
+		"removeComments": true,
+		"incremental": true,
+		"declaration": true,
+		"sourceMap": false,
     "moduleResolution": "node16",
-    "moduleDetection": "force",
-    "target": "ESNext",
-    "rootDir": "./src",
-    "outDir": "./dist",
-    "types": [],
-    "plugins": [
-      {
-        "name": "typescript-eslint-language-service"
-      }
-    ]
-  },
-  "include": [
-    "src/**/*.ts"
-  ],
-  "exclude": [
-    "**/node_modules",
-    "**/.*/",
-    "src/**/*.test.ts"
-  ]
+		"moduleDetection": "force",
+		"module": "node16",
+		"target": "ESNext",
+		"rootDir": "./src",
+		"outDir": "./dist",
+		"types": [],
+		"plugins": [
+			{
+				"name": "typescript-eslint-language-service"
+			}
+		]
+	},
+	"include": [
+		"src/**/*.ts"
+	],
+	"exclude": [
+		"**/node_modules",
+		"**/.*/",
+		"src/**/*.test.ts"
+	]
 }
