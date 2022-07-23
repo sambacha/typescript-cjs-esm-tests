@@ -33,9 +33,7 @@
     "target": "ESNext",
     "rootDir": "./src",
     "outDir": "./dist",
-    "types": [
-      "@types/node"
-    ],
+    "types": [],
     "plugins": [
       {
         "name": "typescript-eslint-language-service"
@@ -43,7 +41,6 @@
     ]
   },
   "include": [
-    "bigint-env.d.ts",
     "src/**/*.ts"
   ],
   "exclude": [
