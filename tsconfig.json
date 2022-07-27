@@ -27,13 +27,15 @@
     "incremental": true,
     "declaration": true,
     "sourceMap": false,
-    "moduleResolution": "node16",
-    "moduleDetection": "force",
-    "module": "node16",
+    "moduleResolution": "nodenext",
+    "moduleDetection": "auto",
+    "module": "NodeNext",
     "target": "ESNext",
     "rootDir": "./src",
     "outDir": "./dist",
-    "types": [],
+    "types": [
+      "@types/node"
+    ],
     "plugins": [
       {
         "name": "typescript-eslint-language-service"
