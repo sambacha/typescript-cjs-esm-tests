@@ -35,6 +35,18 @@
 <small><i><a href='#'>This is a work in progress</a></i></small>
 
 
+## `package.json` TLDR
+
+```jsonc
+//...
+  "type": "module",
+  "main": "dist/index.cjs",   // or .js if "type" is unspecified
+  "exports": {
+    "import": "./dist/index.js",   // no need for .mjs if "type" is "module" (recommended)
+     "require": "./dist/index.cjs"   // or .js if "type" is unspecified
+//...
+```
+
 ## Motivation
 
 Establishing the best way to support cjs and esm and how to structure project to enable that (see results.txt for more info)
