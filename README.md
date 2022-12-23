@@ -47,6 +47,34 @@
 //...
 ```
 
+## Problematic Settings
+
+> **Warning** <br />
+> Use at your own discretion 
+
+### dont use `browser` field
+
+webpack's resolve module algorithm picks a more specific field from `package.json` (and other bundlers too), so webpack chooses UMD module from `browser` field on the default and that breaks tree-shaking[^1]
+
+[^1]: Source: https://github.com/TanStack/query/discussions/3986 - danke https://github.com/jeetiss
+
+
+<details>
+    <summary>@tanstack/query-example-react-nextjs</summary>
+    
+<img width="1506" alt="Снимок экрана 2022-08-05 в 11 12 48" src="https://user-images.githubusercontent.com/6726016/183033639-20b33c71-5c81-442c-a711-baa3b266f0dc.png">
+
+</details>
+
+
+### dont use `preserveModules` 
+
+CJS build contains `preserveModules` enabled and that creates bundle problems
+- all external modules are copied to the `dist` folder and shipped to `npm`, so all users download them twice
+
+- Useing a browser field and `preserveModules` don't copy files specified by this field, so it creates issues like https://github.com/TanStack/query/issues/3965
+
+
 ## `load-esm.{ts,mts}`
 
 ```typescript
