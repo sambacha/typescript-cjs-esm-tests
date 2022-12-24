@@ -38,6 +38,29 @@
 ## `package.json` TLDR
 
 ```jsonc
+  "main": "dist/${NAME}.cjs.js",
+  "module": "dist/${NAME}.esm.js",
+  "browser": {
+    "./dist/${NAME}.esm.js": "./dist/${NAME}.browser.esm.js"
+  },
+  "exports": {
+    ".": {
+      "module": {
+        "worker": "./dist/${NAME}.worker.esm.js",
+        "browser": "./dist/${NAME}.browser.esm.js",
+        "default": "./dist/${NAME}.esm.js"
+      },
+      "default": "./dist/${NAME}.cjs.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+```  
+
+```jsonc
 //...
   "type": "module",
   "main": "dist/index.cjs",   // or .js if "type" is unspecified
