@@ -1,10 +1,26 @@
 # `std.module.format` 
 
-> version 0.1.5
+> version 0.2.0:2023.01.15
 
 - [`std.module.format`](#-stdmoduleformat-)
-  * [Overview](#overview)
+  * [`package.json` TLDR](#-packagejson--tldr)
+  * [Problematic Settings](#problematic-settings)
+    + [Dont use `browser` field](#dont-use--browser--field)
+    + [dont use `preserveModules`](#dont-use--preservemodules-)
+    + [`moduleResolution` `NodeNext` only allows defined import paths](#-moduleresolution---nodenext--only-allows-defined-import-paths)
+      - [correct manifest](#correct-manifest)
+  * [`load-esm.{ts,mts}`](#-load-esm-ts-mts--)
+  * [Motivation](#motivation)
+    + [Opt in compiler options](#opt-in-compiler-options)
+    + [Solution](#solution)
+      - [Other Compiler Options Affecting the Build Result](#other-compiler-options-affecting-the-build-result)
+      - [Suggested `tsconfig` values](#suggested--tsconfig--values)
+  * [Side by Side Compare](#side-by-side-compare)
+    + [node:assert](#node-assert)
+      - [Modern](#modern)
+      - [Legacy](#legacy)
   * [TLDR](#tldr)
+    + [Cheatsheet](#cheatsheet)
   * [Avoid Default Exports and Prefer Named Exports](#avoid-default-exports-and-prefer-named-exports)
     + [Context](#context)
     + [Summary](#summary)
@@ -32,9 +48,6 @@
     + [parserOptions.moduleResolver](#parseroptionsmoduleresolver)
   * [License](#license)
 
-<small><i><a href='#'>This is a work in progress</a></i></small>
-
-
 ## `package.json` TLDR
 
 ```jsonc
@@ -52,7 +65,7 @@
 > **Warning** <br />
 > Use at your own discretion 
 
-### dont use `browser` field
+### Dont use `browser` field
 
 webpack's resolve module algorithm picks a more specific field from `package.json` (and other bundlers too), so webpack chooses UMD module from `browser` field on the default and that breaks tree-shaking[^1]
 
@@ -390,9 +403,9 @@ Node.js supports a new setting in package.json called type. "type" can be set to
 
 Node.js supports two extensions to help with this: `.mjs` and `.cjs`. `.mjs` files are always ES modules, and `.cjs` files are always CommonJS modules, and there’s no way to override these.
 
-In turn, TypeScript supports two new source file extensions: .mts and `.cts`. When TypeScript emits these to JavaScript files, it will emit them to `.mjs` and `.cjs` respectively.
+In turn, TypeScript supports two new source file extensions: `.mts` and `.cts`. When TypeScript emits these to JavaScript files, it will emit them to `.mjs` and `.cjs` respectively.
 
-Furthermore, TypeScript also supports two new declaration file extensions: .d.mts and .d.cts. When TypeScript generates declaration files for `.mts` and `.cts`, their corresponding extensions will be `.d.mts` and `.d.cts`.
+Furthermore, TypeScript also supports two new declaration file extensions:` .d.mt`s and `.d.cts`. When TypeScript generates declaration files for `.mts` and `.cts`, their corresponding extensions will be `.d.mts` and `.d.cts`.
 
 Using these extensions is entirely optional, but will often be useful even if you choose not to use them as part of your primary workflow.
 
@@ -481,7 +494,7 @@ HighCharts.chart('container', { ... }); // Notice \`.default\`
 
 > [esModuleInterop, https://www.typescriptlang.org/tsconfig#esModuleInterop](https://www.typescriptlang.org/tsconfig#esModuleInterop)
 
-By default (with esModuleInterop false or not set) TypeScript treats CommonJS/AMD/UMD modules similar to ES6 modules. In doing this, there are two parts in particular which turned out to be flawed assumptions:
+By default (with `esModuleInterop` false or not set) TypeScript treats CommonJS/AMD/UMD modules similar to ES6 modules. In doing this, there are two parts in particular which turned out to be flawed assumptions:
 
 a namespace import like `import * as moment from "moment"` acts the same as `const moment = require("moment")`
 
@@ -609,7 +622,7 @@ const f: EmptyObject = {};        // NO ERROR - as expected
 
 This is ***technically*** safe in this instance, [because under the hood the `{}` type is passed into an intersection type](https://github.com/DefinitelyTyped/DefinitelyTyped/blob/6fd37a55773b23e00a19418d9b5aad912087c982/types/react/index.d.ts#L501) (see the note at the end of this comment for why this is safe).
 
-However, there is no way for us to statically analyse and know that this is a safe usage.
+However, there is no way for us to statically analyze and know that this is a safe usage.
 To work around this, consider reconfiguring the lint rule to match your repository's coding style.
 You can use the following config to allow it:
 
@@ -790,23 +803,23 @@ The following are not valid module specifiers according to the above algorithm:
 
 > [source, https://github.com/Microsoft/TypeScript/wiki/Using-the-Compiler-API#customizing-module-resolution]
 
-You can override the standard way the compiler resolves modules by implementing optional method: CompilerHost.resolveModuleNames:
+You can override the standard way the compiler resolves modules by implementing optional method: C`ompilerHost.resolveModuleNames`:
 
 ```typescript
 CompilerHost.resolveModuleNames(moduleNames: string[], containingFile: string): string[].
 ```
 
-The method is given a list of module names in a file, and is expected to return an array of size moduleNames.length, each element of the array stores either:
+The method is given a list of module names in a file, and is expected to return an array of size `moduleNames`.length, each element of the array stores either:
 
-an instance of ResolvedModule with non-empty property resolvedFileName - resolution for corresponding name from moduleNames array or undefined if module name cannot be resolved.
+an instance of `ResolvedModule` with non-empty property `resolvedFileName` - resolution for corresponding name from moduleNames array or undefined if module name cannot be resolved.
 
-You can invoke the standard module resolution process via calling resolveModuleName:
+You can invoke the standard module resolution process via calling `resolveModuleName`:
 
 ```typescript
 resolveModuleName(moduleName: string, containingFile: string, options: CompilerOptions, moduleResolutionHost: ModuleResolutionHost): ResolvedModuleNameWithFallbackLocations.
 ```
 
-This function returns an object that stores result of module resolution (value of resolvedModule property) as well as list of file names that were considered candidates before making current decision.
+This function returns an object that stores result of module resolution (value of `resolvedModule` property) as well as list of file names that were considered candidates before making current decision.
 
 ```typescript
 import * as ts from "typescript";
@@ -891,7 +904,7 @@ Default: `undefined`
 
 This option allows you to provide a custom module resolution. The value should point to a JS file that default exports (`export default`, or `module.exports =`, or `export =`) a file with the following interface:
 
-```
+```typescript
 interface ModuleResolver {
   version: 1;
   resolveModuleNames(
@@ -903,9 +916,9 @@ interface ModuleResolver {
   ): (ts.ResolvedModule | undefined)[];
 }
 ```
-Refer to the TypeScript Wiki for an example on how to write the resolveModuleNames function.
+Refer to the TypeScript Wiki for an example on how to write the `resolveModuleNames` function.
 
-Note that if you pass custom programs via options.programs this option will not have any effect over them (you can simply add the custom resolution on them directly).
+Note that if you pass custom programs via `options.program`s this option will not have any effect over them (you can simply add the custom resolution on them directly).
 
 ## License
 
