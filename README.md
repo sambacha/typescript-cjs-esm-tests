@@ -74,6 +74,40 @@ CJS build contains `preserveModules` enabled and that creates bundle problems
 
 - Useing a browser field and `preserveModules` don't copy files specified by this field, so it creates issues like https://github.com/TanStack/query/issues/3965
 
+### `moduleResolution` `NodeNext` only allows defined import paths 
+
+When setting moduleResolution in our tsconfig to NodeNext. When this is enabled, the module resolution will only allow importing from paths that are defined within the exports config. Because only `types/index.d.ts` is available for import, it can cause these kinds of embedded imports to fail:
+
+```javascript
+import("@stitches/react/types/css-util").CSS
+```
+
+An alternative would be to ensure that all types are exported from the types/index.d.ts file.
+
+> see https://github.com/stitchesjs/stitches/pull/1115#issue-1441336030
+
+#### correct manifest
+
+```diff
+  "exports": {
+    ".": {
+      "require": "./dist/index.cjs",
+      "import": "./dist/index.mjs",
+      "types": "./types/index.d.ts"
+    },
++    "./types/*": {
++      "types": "./types/*.d.ts"
+    },
+    "./global": "./dist/index.global.js"
+  },
+  "files": [
+    "dist/*.cjs",
+    "dist/*.js",
+    "dist/*.map",
+    "dist/*.mjs",
+    "types/*.d.ts"
+  ],
+```  
 
 ## `load-esm.{ts,mts}`
 
