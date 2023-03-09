@@ -60,6 +60,16 @@
 //...
 ```
 
+1. ESM resolution algorithm does not currently support automatic
+resolution of file extensions and does not have the hability to
+import directories that have an index file. The extension and the name
+of the file being import need to _always_ be spcified. See:
+https://nodejs.org/api/esm.html#esm_customizing_esm_specifier_resolution_algorithm
+
+2. Typescript does not provide features that change compiled JS code.
+This means there is no Typescript feature to include the ".js" on
+compiled code. See: microsoft/TypeScript#16577 (comment)
+
 ## Problematic Settings
 
 > **Warning** <br />
