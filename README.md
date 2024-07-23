@@ -1,53 +1,61 @@
 # `std.module.format` 
 
-> version 0.2.0:2023.01.15
+> version 0.3.0:2024.07.22
 
-- [`std.module.format`](#-stdmoduleformat-)
-  * [`package.json` TLDR](#-packagejson--tldr)
-  * [Problematic Settings](#problematic-settings)
-    + [Dont use `browser` field](#dont-use--browser--field)
-    + [dont use `preserveModules`](#dont-use--preservemodules-)
-    + [`moduleResolution` `NodeNext` only allows defined import paths](#-moduleresolution---nodenext--only-allows-defined-import-paths)
-      - [correct manifest](#correct-manifest)
-  * [`load-esm.{ts,mts}`](#-load-esm-ts-mts--)
-  * [Motivation](#motivation)
-    + [Opt in compiler options](#opt-in-compiler-options)
-    + [Solution](#solution)
-      - [Other Compiler Options Affecting the Build Result](#other-compiler-options-affecting-the-build-result)
-      - [Suggested `tsconfig` values](#suggested--tsconfig--values)
-  * [Side by Side Compare](#side-by-side-compare)
-    + [node:assert](#node-assert)
-      - [Modern](#modern)
-      - [Legacy](#legacy)
-  * [TLDR](#tldr)
-    + [Cheatsheet](#cheatsheet)
-  * [Avoid Default Exports and Prefer Named Exports](#avoid-default-exports-and-prefer-named-exports)
-    + [Context](#context)
-    + [Summary](#summary)
-  * [Decision](#decision)
-    + [ECMAScript Module Support in Node.js](#ecmascript-module-support-in-nodejs)
-    + [`.mjs`, `.cjs`, == `.mts`, `.cts` && `.d.mts` and `.d.cts`.](#-mjs----cjs-------mts----cts------dmts--and--dcts-)
-  * [Avoid Export Default](#avoid-export-default)
-    + [Poor Discoverability](#poor-discoverability)
-    + [Autocomplete](#autocomplete)
-    + [CommonJS interop](#commonjs-interop)
-    + [Typo Protection](#typo-protection)
-    + [TypeScript auto-import](#typescript-auto-import)
-    + [Re-exporting](#re-exporting)
-    + [Dynamic Imports](#dynamic-imports)
-    + [ES Module Interop](#es-module-interop)
-        * [Note](#note)
-    + [Needs two lines for non-class / non-function](#needs-two-lines-for-non-class---non-function)
-    + [React.js - Named Exports](#reactjs---named-exports)
-  * [{} type](#---type)
-    + [If you want a type that means "empty object"](#if-you-want-a-type-that-means--empty-object-)
-    + [If you are using React, and you want to define `type Props = {}`.](#if-you-are-using-react--and-you-want-to-define--type-props------)
-    + [`GenericObject`](#-genericobject-)
-    + [Module-related host hooks](#module-related-host-hooks)
-  * [Customizing module resolution](#customizing-module-resolution)
-    + [parserOptions.moduleResolver](#parseroptionsmoduleresolver)
-  * [License](#license)
+<!-- TOC start -->
 
+- [`std.module.format` ](#stdmoduleformat)
+      + [ES6 exports / imports cheat sheet](#es6-exports-imports-cheat-sheet)
+   * [`package.json` TLDR](#packagejson-tldr)
+   * [Problematic Settings](#problematic-settings)
+      + [Dont use `browser` field](#dont-use-browser-field)
+      + [dont use `preserveModules` ](#dont-use-preservemodules)
+      + [`moduleResolution` `NodeNext` only allows defined import paths ](#moduleresolution-nodenext-only-allows-defined-import-paths)
+         - [correct manifest](#correct-manifest)
+   * [`load-esm.{ts,mts}`](#load-esmtsmts)
+   * [Motivation](#motivation)
+      + [Opt in compiler options](#opt-in-compiler-options)
+      + [Solution](#solution)
+         - [Other Compiler Options Affecting the Build Result](#other-compiler-options-affecting-the-build-result)
+         - [Suggested `tsconfig` values](#suggested-tsconfig-values)
+   * [Side by Side Compare](#side-by-side-compare)
+      + [node:assert](#nodeassert)
+         - [Modern](#modern)
+         - [Legacy](#legacy)
+   * [TLDR](#tldr)
+      + [Cheatsheet](#cheatsheet)
+   * [Avoid Default Exports and Prefer Named Exports](#avoid-default-exports-and-prefer-named-exports)
+      + [Context](#context)
+      + [Summary](#summary)
+   * [Decision](#decision)
+      + [ECMAScript Module Support in Node.js](#ecmascript-module-support-in-nodejs)
+      + [`.mjs`, `.cjs`, == `.mts`, `.cts` && `.d.mts` and `.d.cts`.](#mjs-cjs-mts-cts-dmts-and-dcts)
+   * [Avoid Export Default](#avoid-export-default)
+      + [Poor Discoverability](#poor-discoverability)
+      + [Autocomplete](#autocomplete)
+      + [CommonJS interop](#commonjs-interop)
+      + [Typo Protection](#typo-protection)
+      + [TypeScript auto-import](#typescript-auto-import)
+      + [Re-exporting](#re-exporting)
+      + [Dynamic Imports](#dynamic-imports)
+      + [ES Module Interop](#es-module-interop)
+            * [Note](#note)
+      + [Needs two lines for non-class / non-function](#needs-two-lines-for-non-class-non-function)
+      + [React.js - Named Exports](#reactjs-named-exports)
+   * [{} type](#-type)
+      + [If you want a type that means "empty object"](#if-you-want-a-type-that-means-empty-object)
+      + [If you are using React, and you want to define `type Props = {}`.](#if-you-are-using-react-and-you-want-to-define-type-props-)
+      + [`GenericObject`](#genericobject)
+      + [Module-related host hooks](#module-related-host-hooks)
+   * [Customizing module resolution](#customizing-module-resolution)
+      + [parserOptions.moduleResolver](#parseroptionsmoduleresolver)
+   * [Fixing ES6 Import Syntax with `verbatimModuleSyntax` ](#fixing-es6-import-syntax-with-verbatimmodulesyntax)
+      + [Use require() instead of import](#use-require-instead-of-import)
+      + [Disable verbatimModuleSyntax](#disable-verbatimmodulesyntax)
+      + [Use a compatibility layer](#use-a-compatibility-layer)
+   * [License](#license)
+
+<!-- TOC end -->
 
 
 ### ES6 exports / imports cheat sheet
@@ -1000,6 +1008,52 @@ interface ModuleResolver {
 Refer to the TypeScript Wiki for an example on how to write the `resolveModuleNames` function.
 
 Note that if you pass custom programs via `options.program`s this option will not have any effect over them (you can simply add the custom resolution on them directly).
+
+## Fixing ES6 Import Syntax with `verbatimModuleSyntax` 
+
+In your code, you're using ES6 import syntax (
+
+```typescript
+import { hash } from "@stablelib/sha256")
+```
+This is not compatible with CommonJS modules when `verbatimModuleSyntax  is enabled.
+
+To fix this issue, you have a few options:
+
+### Use require() instead of import
+
+Replace the import statement with a require statement, like this:
+
+```typescript
+const { hash } = require("@stablelib/sha256");
+```
+This will use the CommonJS module system, which is compatible with the verbatimModuleSyntax setting.
+
+### Disable verbatimModuleSyntax
+
+If you're using a configuration file (e.g., tsconfig.json) or a build tool (e.g., Webpack), you can disable verbatimModuleSyntax to allow ES6 import syntax. For example, in tsconfig.json, you can add the following setting:
+
+```jsonc
+{
+  "compilerOptions": {
+    // ... other options ...
+    "verbatimModuleSyntax": false
+  }
+}
+```
+This will allow you to use ES6 import syntax without issues.
+
+### Use a compatibility layer
+
+If you're using a library that only provides ES6 modules, you can use a compatibility layer like esm to convert the ES6 module to a CommonJS module. For example:
+
+```typescript
+const esm = require("esm");
+const { hash } = esm("@stablelib/sha256");
+```
+This will allow you to use the ES6 module with your CommonJS code.
+
+Choose the option that best fits your project's requirements, and let me know if you have any further questions!
 
 ## License
 
