@@ -1,0 +1,79 @@
+{
+  "files": [
+    "*"
+  ],
+  "private": false,
+  "types": "dist/index.d.ts",
+  "main": "dist/index.js",
+  "type": "commonjs",
+  "sideEffects": [
+    "./_shims/index.js",
+    "./_shims/index.mjs",
+    "./shims/node.js",
+    "./shims/node.mjs",
+    "./shims/web.js",
+    "./shims/web.mjs"
+  ],
+  "imports": {
+    "@/imports__path": ".",
+    "@/imports__path/*": "./src/*"
+  },
+  "exports": {
+    "./_shims/auto/*": {
+      "deno": {
+        "types": "./dist/_shims/auto/*.d.ts",
+        "require": "./dist/_shims/auto/*.js",
+        "default": "./dist/_shims/auto/*.mjs"
+      },
+      "bun": {
+        "types": "./dist/_shims/auto/*.d.ts",
+        "require": "./dist/_shims/auto/*-bun.js",
+        "default": "./dist/_shims/auto/*-bun.mjs"
+      },
+      "browser": {
+        "types": "./dist/_shims/auto/*.d.ts",
+        "require": "./dist/_shims/auto/*.js",
+        "default": "./dist/_shims/auto/*.mjs"
+      },
+      "worker": {
+        "types": "./dist/_shims/auto/*.d.ts",
+        "require": "./dist/_shims/auto/*.js",
+        "default": "./dist/_shims/auto/*.mjs"
+      },
+      "workerd": {
+        "types": "./dist/_shims/auto/*.d.ts",
+        "require": "./dist/_shims/auto/*.js",
+        "default": "./dist/_shims/auto/*.mjs"
+      },
+      "node": {
+        "types": "./dist/_shims/auto/*-node.d.ts",
+        "require": "./dist/_shims/auto/*-node.js",
+        "default": "./dist/_shims/auto/*-node.mjs"
+      },
+      "types": "./dist/_shims/auto/*.d.ts",
+      "require": "./dist/_shims/auto/*.js",
+      "default": "./dist/_shims/auto/*.mjs"
+    },
+    ".": {
+      "require": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "types": "./dist/index.d.mts",
+      "default": "./dist/index.mjs"
+    },
+    "./*.mjs": {
+      "types": "./dist/*.d.ts",
+      "default": "./dist/*.mjs"
+    },
+    "./*.js": {
+      "types": "./dist/*.d.ts",
+      "default": "./dist/*.js"
+    },
+    "./*": {
+      "types": "./dist/*.d.ts",
+      "require": "./dist/*.js",
+      "default": "./dist/*.mjs"
+    }
+  }
+}
