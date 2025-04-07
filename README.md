@@ -1,14 +1,9 @@
-# `std.module.format` 
-
-> version 0.3.0:2024.07.22
-
-<!-- TOC start -->
-
 - [`std.module.format` ](#stdmoduleformat)
-      + [ES6 exports / imports cheat sheet](#es6-exports-imports-cheat-sheet)
+      + [ES6 exports / imports cheat sheet](#es6-exports--imports-cheat-sheet)
    * [`package.json` TLDR](#packagejson-tldr)
    * [Problematic Settings](#problematic-settings)
-      + [Dont use `browser` field](#dont-use-browser-field)
+      + [~~Dont use `browser` field~~ Use `browser` specifically for CDN's](#dont-use-browser-field-use-browser-specifically-for-cdns)
+      + [Restrictions on Import Assertions Under ](#restrictions-on-import-assertions-under)
       + [dont use `preserveModules` ](#dont-use-preservemodules)
       + [`moduleResolution` `NodeNext` only allows defined import paths ](#moduleresolution-nodenext-only-allows-defined-import-paths)
          - [correct manifest](#correct-manifest)
@@ -29,7 +24,7 @@
       + [Summary](#summary)
    * [Decision](#decision)
       + [ECMAScript Module Support in Node.js](#ecmascript-module-support-in-nodejs)
-      + [`.mjs`, `.cjs`, == `.mts`, `.cts` && `.d.mts` and `.d.cts`.](#mjs-cjs-mts-cts-dmts-and-dcts)
+      + [`.mjs`, `.cjs`, == `.mts`, `.cts` && `.d.mts` and `.d.cts`.](#mjs-cjs--mts-cts--dmts-and-dcts)
    * [Avoid Export Default](#avoid-export-default)
       + [Poor Discoverability](#poor-discoverability)
       + [Autocomplete](#autocomplete)
@@ -40,11 +35,11 @@
       + [Dynamic Imports](#dynamic-imports)
       + [ES Module Interop](#es-module-interop)
             * [Note](#note)
-      + [Needs two lines for non-class / non-function](#needs-two-lines-for-non-class-non-function)
-      + [React.js - Named Exports](#reactjs-named-exports)
+      + [Needs two lines for non-class / non-function](#needs-two-lines-for-non-class--non-function)
+      + [React.js - Named Exports](#reactjs---named-exports)
    * [{} type](#-type)
       + [If you want a type that means "empty object"](#if-you-want-a-type-that-means-empty-object)
-      + [If you are using React, and you want to define `type Props = {}`.](#if-you-are-using-react-and-you-want-to-define-type-props-)
+      + [If you are using React, and you want to define `type Props = {}`.](#if-you-are-using-react-and-you-want-to-define-type-props--)
       + [`GenericObject`](#genericobject)
       + [Module-related host hooks](#module-related-host-hooks)
    * [Customizing module resolution](#customizing-module-resolution)
@@ -55,9 +50,17 @@
       + [Use a compatibility layer](#use-a-compatibility-layer)
    * [License](#license)
 
-<!-- TOC end -->
+<a name="stdmoduleformat"></a>
+# `std.module.format` 
 
 
+> [!NOTE]
+> Last updated 2025/04/06
+
+
+
+
+<a name="es6-exports--imports-cheat-sheet"></a>
 ### ES6 exports / imports cheat sheet
 
 > https://github.com/eslint/espree/pull/43
@@ -127,6 +130,7 @@ import foo, * as bar from "foo";
 import "foo";
 ```
 
+<a name="packagejson-tldr"></a>
 ## `package.json` TLDR
 
 ```jsonc
@@ -149,12 +153,16 @@ https://nodejs.org/api/esm.html#esm_customizing_esm_specifier_resolution_algorit
 This means there is no Typescript feature to include the ".js" on
 compiled code. See: microsoft/TypeScript#16577 (comment)
 
+<a name="problematic-settings"></a>
 ## Problematic Settings
 
 > **Warning** <br />
 > Use at your own discretion 
 
-### Dont use `browser` field
+<a name="dont-use-browser-field-use-browser-specifically-for-cdns"></a>
+### ~~Dont use `browser` field~~ Use `browser` specifically for CDN's, YMMV per module usage
+
+jsdeliver cdn uses this see <https://github.com/jsdelivr/jsdelivr#configuring-a-default-file-in-packagejson>
 
 webpack's resolve module algorithm picks a more specific field from `package.json` (and other bundlers too), so webpack chooses UMD module from `browser` field on the default and that breaks tree-shaking[^1]
 
@@ -164,11 +172,34 @@ webpack's resolve module algorithm picks a more specific field from `package.jso
 <details>
     <summary>@tanstack/query-example-react-nextjs</summary>
     
-<img width="1506" alt="Снимок экрана 2022-08-05 в 11 12 48" src="https://user-images.githubusercontent.com/6726016/183033639-20b33c71-5c81-442c-a711-baa3b266f0dc.png">
+<img width="1506" src="https://user-images.githubusercontent.com/6726016/183033639-20b33c71-5c81-442c-a711-baa3b266f0dc.png">
 
 </details>
 
 
+<a name="restrictions-on-import-assertions-under"></a>
+### Restrictions on Import Assertions Under 
+
+
+```
+--module nodenext
+```
+
+Import assertions were a proposed addition to ECMAScript to ensure certain properties of an import (e.g. “this module is JSON, and is not intended to be executable JavaScript code”). They were reinvented as a proposal called import attributes. As part of the transition, they swapped from using the assert keyword to using the with keyword.[^1]
+
+[^1]: https://www.typescriptlang.org/docs/handbook/release-notes/typescript-5-8.html#restrictions-on-import-assertions-under---module-nodenext
+
+
+
+```typescript
+// An import assertion ❌ - not future-compatible with most runtimes.
+import data from "./data.json" assert { type: "json" };
+// An import attribute ✅ - the preferred way to import a JSON file.
+import data from "./data.json" with { type: "json" };
+```
+
+
+<a name="dont-use-preservemodules"></a>
 ### dont use `preserveModules` 
 
 CJS build contains `preserveModules` enabled and that creates bundle problems
@@ -176,6 +207,7 @@ CJS build contains `preserveModules` enabled and that creates bundle problems
 
 - Useing a browser field and `preserveModules` don't copy files specified by this field, so it creates issues like https://github.com/TanStack/query/issues/3965
 
+<a name="moduleresolution-nodenext-only-allows-defined-import-paths"></a>
 ### `moduleResolution` `NodeNext` only allows defined import paths 
 
 When setting moduleResolution in our tsconfig to NodeNext. When this is enabled, the module resolution will only allow importing from paths that are defined within the exports config. Because only `types/index.d.ts` is available for import, it can cause these kinds of embedded imports to fail:
@@ -188,6 +220,7 @@ An alternative would be to ensure that all types are exported from the types/ind
 
 > see https://github.com/stitchesjs/stitches/pull/1115#issue-1441336030
 
+<a name="correct-manifest"></a>
 #### correct manifest
 
 ```diff
@@ -211,6 +244,7 @@ An alternative would be to ensure that all types are exported from the types/ind
   ],
 ```  
 
+<a name="load-esmtsmts"></a>
 ## `load-esm.{ts,mts}`
 
 ```typescript
@@ -233,10 +267,12 @@ export function loadEsmModule<T>(modulePath: string | URL): Promise<T> {
 }
 ```
 
+<a name="motivation"></a>
 ## Motivation
 
 Establishing the best way to support cjs and esm and how to structure project to enable that (see results.txt for more info)
 
+<a name="opt-in-compiler-options"></a>
 ### Opt in compiler options
 
 **disable** the following compiler options:
@@ -251,6 +287,7 @@ The two flags `esModuleInterop` and `allowSyntheticDefaultImports` enable intero
 
 Unfortunately these options are viral: **enabling them in a package requires all downstream consumers to enable them as well** .  The TLDR is due to the way CommonJS and ES Modules interoperate with bundlers (Webpack, Parcel, etc.). 
 
+<a name="solution"></a>
 ### Solution
 
 >**Warning**   
@@ -259,6 +296,7 @@ Unfortunately these options are viral: **enabling them in a package requires all
 Consumers can now opt into these semantics, it also does not require them to do so. 
 Consumers **can always safely use alternative import syntaxes (including falling back to require() and import()),** or can enable these flags and opt into this behavior themselves.
 
+<a name="other-compiler-options-affecting-the-build-result"></a>
 #### Other Compiler Options Affecting the Build Result
 
 - `extends`   
@@ -267,6 +305,7 @@ Consumers **can always safely use alternative import syntaxes (including falling
 - `jsxFactory`   
 - `jsxFragmentFactory`   
 
+<a name="suggested-tsconfig-values"></a>
 #### Suggested `tsconfig` values
 
 ```jsonc
@@ -278,13 +317,16 @@ Consumers **can always safely use alternative import syntaxes (including falling
 
 > [source, vitejs developer guide: vitejs.dev/guide/features.html#typescript-compiler-options](https://vitejs.dev/guide/features.html#typescript-compiler-options)
 
+<a name="side-by-side-compare"></a>
 ## Side by Side Compare
 
+<a name="nodeassert"></a>
 ### node:assert
 
 >**Note**    
 >[See the NodeJs Assertion Documentation for more information](https://nodejs.org/api/assert.html#assert)
     
+<a name="modern"></a>
 #### Modern
 
 ```typescript
@@ -302,6 +344,7 @@ import { strict as assert } from 'node:assert'; // ESM
 const assert = require('node:assert/strict');   // CJS
 ```
     
+<a name="legacy"></a>
 #### Legacy
    
 ```typescript
@@ -309,6 +352,7 @@ import assert from 'node:assert';      // ESM
 const assert = require('node:assert'); // CJS
 ```
 
+<a name="tldr"></a>
 ## TLDR
 
 ```javascript
@@ -367,6 +411,7 @@ while ((m = regex.exec(str)) !== null) {
 }
 ```
 
+<a name="cheatsheet"></a>
 ### Cheatsheet
 
 ```ts twoslash
@@ -387,8 +432,10 @@ export type { T }
 ```
 > [source, typescriptlang.org/docs/handbook/release-notes/typescript-3-8.html#type-only-imports-and-export](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-3-8.html#type-only-imports-and-export)
 
+<a name="avoid-default-exports-and-prefer-named-exports"></a>
 ## Avoid Default Exports and Prefer Named Exports
 
+<a name="context"></a>
 ### Context
 
 When CommonJS was the primary authoring format, the best practice was to export only one thing from a module using the module.exports = ... format. This aligned with the UNIX philosophy of "Do one thing well". The module would be consumed (const localName = require('the-module');) without having to know the internal structure.
@@ -399,6 +446,7 @@ However, there are numerous reasons to avoid default exports, as documented by o
 
 > NOTE. https://humanwhocodes.com/blog/2019/01/stop-using-default-exports-javascript-module/
 
+<a name="summary"></a>
 ### Summary
 
 They add indirection by encouraging a developer to create local names for modules, increasing cognitive load and slowing down code comprehension: import TheListThing from 'not-a-list-thing';.
@@ -411,6 +459,7 @@ They add indirection by encouraging a developer to create local names for module
   IDE tools like "Find All References" and "Go To Definition" function
   Manual codebase searching ("grep", etc) is easier with a unique symbol
 
+<a name="decision"></a>
 ## Decision
 
 > source: https://backstage.io/docs/architecture-decisions/adrs-adr004
@@ -459,6 +508,7 @@ Imports that bypass an index file are discouraged, but may sometimes be necessar
 import { helperFunc } from '../../lib/UtilityX/helper';
 ```
 
+<a name="ecmascript-module-support-in-nodejs"></a>
 ### ECMAScript Module Support in Node.js
 
 > source https://devblogs.microsoft.com/typescript/announcing-typescript-4-5-beta/
@@ -488,6 +538,7 @@ Node.js supports a new setting in package.json called type. "type" can be set to
     }
 }
 ```
+<a name="mjs-cjs--mts-cts--dmts-and-dcts"></a>
 ### `.mjs`, `.cjs`, == `.mts`, `.cts` && `.d.mts` and `.d.cts`.
 
 Node.js supports two extensions to help with this: `.mjs` and `.cjs`. `.mjs` files are always ES modules, and `.cjs` files are always CommonJS modules, and there’s no way to override these.
@@ -499,6 +550,7 @@ Furthermore, TypeScript also supports two new declaration file extensions:` .d.m
 Using these extensions is entirely optional, but will often be useful even if you choose not to use them as part of your primary workflow.
 
 
+<a name="avoid-export-default"></a>
 ## Avoid Export Default
 
 > source:  TypeScript Deep Dive
@@ -527,6 +579,7 @@ import { Foo } from "./foo";
 ```
 Below I also present a few more reasons.
 
+<a name="poor-discoverability"></a>
 ### Poor Discoverability
 
 Discoverability is very poor for default exports. You cannot explore a module with intellisense to see if it has a default export or not.
@@ -542,26 +595,32 @@ Without export default you get a nice intellisense here:
 import { /\* here \*/ } from 'something';
 ```
 
+<a name="autocomplete"></a>
 ### Autocomplete
 
 Irrespective of if you know about the exports, you even autocomplete at this `import {/*here*/} from "./foo";` cursor location. Gives your developers a bit of wrist relief.
 
+<a name="commonjs-interop"></a>
 ### CommonJS interop
 
 With `default` there is horrible experience for commonJS users who have to `const {default} = require('module/foo');` instead of `const {Foo} = require('module/foo')`. You will most likely want to rename the `default` export to something else when you import it.
 
+<a name="typo-protection"></a>
 ### Typo Protection
 
 You don't get typos like one dev doing `import Foo from "./foo";` and another doing `import foo from "./foo";`
 
+<a name="typescript-auto-import"></a>
 ### TypeScript auto-import
 
 Auto import quickfix works better. You use `Foo` and auto import will write down `import { Foo } from "./foo";` cause its a well-defined name exported from a module. Some tools out there will try to magic read and _infer_ a name for a default export but magic is flaky.
 
+<a name="re-exporting"></a>
 ### Re-exporting
 
 Re-exporting is common for the root `index` file in npm packages, and forces you to name the default export manually e.g. `export { default as Foo } from "./foo";` (with default) vs. `export * from "./foo"` (with named exports).
 
+<a name="dynamic-imports"></a>
 ### Dynamic Imports
 
 Default exports expose themselves badly named as `default` in dynamic `import`s e.g.
@@ -578,6 +637,7 @@ const {HighCharts} \= await import('https://code.highcharts.com/js/es-modules/ma
 HighCharts.chart('container', { ... }); // Notice \`.default\`
 ```
 
+<a name="es-module-interop"></a>
 ### ES Module Interop
 
 
@@ -596,12 +656,14 @@ This mis-match causes these two issues:
 - while accurate to the ES6 modules spec, most libraries with CommonJS/AMD/UMD modules didn’t conform as strictly as TypeScript’s implementation.
 
 
+<a name="note"></a>
 ##### Note
 
 The namespace import `import * as fs from "fs"` only accounts for properties which are **owned** (basically properties set on the object and not via the prototype chain) on the imported object. If the module you’re importing defines its API using inherited properties, you need to use the default import form (`import fs from "fs"`), or *disable esModuleInterop*.
 
 
 
+<a name="needs-two-lines-for-non-class--non-function"></a>
 ### Needs two lines for non-class / non-function
 
 Can be one statement for function / class e.g.
@@ -633,6 +695,7 @@ soWhat: 'The export is now \*removed\* from the declaration'
 export default foo;
 ```
 
+<a name="reactjs---named-exports"></a>
 ### React.js - Named Exports
 
 > [source, https://reactjs.org/docs/code-splitting.html#named-exports](https://reactjs.org/docs/code-splitting.html#named-exports)
@@ -657,6 +720,7 @@ import React, { lazy } from 'react';
 const MyComponent = lazy(() => import("./MyComponent.js"));
 ```
 
+<a name="-type"></a>
 ## {} type
 
 > [Below is copied from this comment, see https://github.com/typescript-eslint/typescript-eslint/issues/2063#issuecomment-675156492](https://github.com/typescript-eslint/typescript-eslint/issues/2063#issuecomment-675156492)
@@ -691,6 +755,7 @@ Unfortunately, there's no _type_ in TS that means "an empty object".
 
 There are the following options for you:
 
+<a name="if-you-want-a-type-that-means-empty-object"></a>
 ### If you want a type that means "empty object"
 
 You can use a type similar to this type.
@@ -707,6 +772,7 @@ const f: EmptyObject = {};        // NO ERROR - as expected
 ```
 [ts playground repl](https://www.typescriptlang.org/play?#code/C4TwDgpgBAogtmUB5ARgKwgY2FAvFAJSwHsAnAEwB4BnYUgSwDsBzAGikYgDcJSA+ANwAoIZmKNaUAIYAuWAmTosOfAG9pcgIxQAvgKhQA9IagQAHpGynSpMqPGSUc+IhCoMV-Jv0Hfv46YWyta2pPYSOJjOCm5KnlAAFACUeHxQqnoGAeaWOLyh4ZLk0a7uwfiMAK4ANtU+ftlBVvl2YhGmJYoeKlCVjOQQAGZMEOT6jbkhrQ44g52x3XjpmX7+JgBySLAEBEgEUAC00tSBuaNCQA)
 
+<a name="if-you-are-using-react-and-you-want-to-define-type-props--"></a>
 ### If you are using React, and you want to define `type Props = {}`.
 
 This is ***technically*** safe in this instance, [because under the hood the `{}` type is passed into an intersection type](https://github.com/DefinitelyTyped/DefinitelyTyped/blob/6fd37a55773b23e00a19418d9b5aad912087c982/types/react/index.d.ts#L501) (see the note at the end of this comment for why this is safe).
@@ -755,6 +821,7 @@ In all other usages, [including in the `extends` clause of a generic type parame
 _Originally posted by @bradzacher in https://github.com/typescript-eslint/typescript-eslint/issues/2063#issuecomment-675156492_
 
 
+<a name="genericobject"></a>
 ### `GenericObject`
 
 ```typescript
@@ -769,6 +836,7 @@ _Originally posted by @bradzacher in https://github.com/typescript-eslint/typesc
 export type GenericObject<T = unknown> = Record<string, T>;
 ```
 
+<a name="module-related-host-hooks"></a>
 ###  Module-related host hooks
 
 > [source, https://html.spec.whatwg.org/multipage/webappapis.html#integration-with-the-javascript-module-system](https://html.spec.whatwg.org/multipage/webappapis.html#integration-with-the-javascript-module-system)
@@ -888,6 +956,7 @@ The following are not valid module specifiers according to the above algorithm:
 -   `.\yam.es`
 
 
+<a name="customizing-module-resolution"></a>
 ## Customizing module resolution
 
 > [source, https://github.com/Microsoft/TypeScript/wiki/Using-the-Compiler-API#customizing-module-resolution]
@@ -985,6 +1054,7 @@ function compile(sourceFiles: string[], moduleSearchLocations: string[]): void {
 }
 ```
 
+<a name="parseroptionsmoduleresolver"></a>
 ### parserOptions.moduleResolver
 
 > [source, https://www.npmjs.com/package/@typescript-eslint/parser](https://www.npmjs.com/package/@typescript-eslint/parser)
@@ -1009,6 +1079,7 @@ Refer to the TypeScript Wiki for an example on how to write the `resolveModuleNa
 
 Note that if you pass custom programs via `options.program`s this option will not have any effect over them (you can simply add the custom resolution on them directly).
 
+<a name="fixing-es6-import-syntax-with-verbatimmodulesyntax"></a>
 ## Fixing ES6 Import Syntax with `verbatimModuleSyntax` 
 
 In your code, you're using ES6 import syntax (
@@ -1020,6 +1091,7 @@ This is not compatible with CommonJS modules when `verbatimModuleSyntax  is enab
 
 To fix this issue, you have a few options:
 
+<a name="use-require-instead-of-import"></a>
 ### Use require() instead of import
 
 Replace the import statement with a require statement, like this:
@@ -1029,6 +1101,7 @@ const { hash } = require("@stablelib/sha256");
 ```
 This will use the CommonJS module system, which is compatible with the verbatimModuleSyntax setting.
 
+<a name="disable-verbatimmodulesyntax"></a>
 ### Disable verbatimModuleSyntax
 
 If you're using a configuration file (e.g., tsconfig.json) or a build tool (e.g., Webpack), you can disable verbatimModuleSyntax to allow ES6 import syntax. For example, in tsconfig.json, you can add the following setting:
@@ -1043,6 +1116,7 @@ If you're using a configuration file (e.g., tsconfig.json) or a build tool (e.g.
 ```
 This will allow you to use ES6 import syntax without issues.
 
+<a name="use-a-compatibility-layer"></a>
 ### Use a compatibility layer
 
 If you're using a library that only provides ES6 modules, you can use a compatibility layer like esm to convert the ES6 module to a CommonJS module. For example:
@@ -1055,6 +1129,7 @@ This will allow you to use the ES6 module with your CommonJS code.
 
 Choose the option that best fits your project's requirements, and let me know if you have any further questions!
 
+<a name="license"></a>
 ## License
 
 CC-SA-2.5
