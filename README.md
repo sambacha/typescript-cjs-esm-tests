@@ -55,10 +55,235 @@
 
 
 > [!NOTE]
-> Last updated 2025/04/06
+> updated 2025/04/11
+
+### Different Types of Imports and Exports
+
+> an overview of how different imports and exports behave
+
+```javascript
+// These give you a live reference:
+import { thing } from './module.js';
+import { thing as otherName } from './module.js';
+import * as module from './module.js';
+const module = await import('./module.js');
+
+// This assigns the current value:
+let { thing } = await import('./module.js');
+```
+
+## The Special Case of `export default`
+
+ The `export default` syntax has different semantics than named exports.
+
+```javascript
+// module.js
+let thing = 'initial';
+export { thing };
+export default thing;
+setTimeout(() => {
+  thing = 'changed';
+}, 500);
+```
+
+> Export Default Behavior
 
 
+### Why the Difference?
 
+The reason for this behavior is that `export default` allows exporting values directly:
+
+```javascript
+export default 'hello!';  // This works
+export { 'hello!' as thing };  // This doesn't work
+```
+
+## The Third Way: `export { thing as default }`
+
+There's another way to export a default that behaves differently:
+
+```javascript
+// module.js
+let thing = 'initial';
+export { thing, thing as default };
+setTimeout(() => {
+  thing = 'changed';
+}, 500);
+```
+
+This method maintains the live reference, unlike `export default thing`.
+
+### Special Case: `export default function`
+
+Functions get special treatment:
+
+```javascript
+// module.js
+export default function thing() {}
+setTimeout(() => {
+  thing = 'changed';
+}, 500);
+
+// main.js
+import thing from './module.js';
+setTimeout(() => {
+  console.log(thing); // "changed"
+}, 1000);
+```
+
+> Function Export Behavior
+
+
+## Circular Dependencies and Hoisting
+
+### Function Hoisting Behavior
+
+```javascript
+thisWorks();  // This runs fine
+function thisWorks() {
+  console.log('yep, it does');
+}
+```
+
+> [!NOTE]
+> Function declarations are hoisted, but other declarations aren't:
+
+```javascript
+assignedFunction();  // Doesn't work
+new SomeClass();    // Doesn't work
+
+const assignedFunction = function() {
+  console.log('nope');
+};
+class SomeClass {}
+```
+
+### Circular Dependencies Example
+
+```javascript
+// main.js
+import { foo } from './module.js';
+foo();
+export function hello() {
+  console.log('hello');
+}
+```
+
+```javascript
+// module.js
+import { hello } from './main.js';
+hello();
+export function foo() {
+  console.log('foo');
+}
+```
+
+This works due to hoisting. However, changing to arrow functions breaks it:
+
+```javascript
+// main.js
+import { foo } from './module.js';
+foo();
+export const hello = () => console.log('hello');
+```
+
+```javascript
+// module.js
+import { hello } from './main.js';
+hello();
+export const foo = () => console.log('foo');
+```
+
+## Summary
+
+The complete behavior overview:
+
+```javascript
+// Live references:
+import { thing } from './module.js';
+import { thing as otherName } from './module.js';
+import * as module from './module.js';
+const module = await import('./module.js');
+
+// Value copy:
+let { thing } = await import('./module.js');
+
+// Live reference exports:
+export { thing };
+export { thing as otherName };
+export { thing as default };
+export default function thing() {}
+
+// Value exports:
+export default thing;
+export default 'hello!';
+```
+
+_Note: The original article was written by Jake Archibald, with contributions from the V8 team members Toon Verwaest, Marja Hölttä, and Mathias Bynens, as well as Dave Herman and Daniel Ehrenberg._
+
+### Best Practices
+
+1. Avoid circular dependencies whenever possible
+2. Be aware of the difference between value exports and reference exports
+3. Consider using `export { thing as default }` instead of `export default thing` when you need to maintain live bindings
+4. Remember that `export default function` is a special case that maintains references
+
+
+```mermaid
+graph TD
+    subgraph "Export Types"
+        A["Named Export<br>export { thing }"] -->|"Live Reference"| D["Import { thing }"]
+        A -->|"Live Reference"| E["Import { thing as otherName }"]
+        A -->|"Live Reference"| F["Import * as module"]
+        A -->|"Live Reference"| G["await import('./module.js')"]
+        
+        B["Default Export<br>export default thing"] -->|"Value Copy"| H["Import default"]
+        
+        C["Function Export<br>export default function(){}"] -->|"Live Reference"| I["Import default function"]
+        
+        J["Named as Default<br>export { thing as default }"] -->|"Live Reference"| K["Import default"]
+    end
+    
+    subgraph "Import Types"
+        D
+        E
+        F
+        G -->|"Value Copy"| L["let { thing } = await import()"]
+        G -->|"Live Reference"| M["const module = await import()"]
+        H
+        I
+        K
+    end
+    
+    subgraph "Circular Dependencies"
+        N["Function Declaration<br>export function thing(){}"] -->|"Works due to hoisting"| O["Circular Import"]
+        P["Arrow Function<br>export const thing = ()=>{}"] -->|"Fails - no hoisting"| Q["Circular Import Fails"]
+    end
+    
+    style A fill:#d4f1f9,stroke:#333
+    style B fill:#ffdfba,stroke:#333
+    style C fill:#ffdfba,stroke:#333,stroke-dasharray: 5 5
+    style J fill:#d4f1f9,stroke:#333,stroke-dasharray: 5 5
+    style N fill:#d8f8e1,stroke:#333
+    style P fill:#ffbaba,stroke:#333
+```
+
+#### Named exports (blue boxes) create live references when imported through any import syntax
+
+Regular named exports maintain live bindings to the original variables
+The special export { thing as default } syntax also maintains live binding
+
+
+#### Default exports (orange boxes) behave differently:
+
+Regular export default thing creates a value copy (not a reference)
+The special case export default function() {} maintains a live reference
+
+
+#### Circular dependencies behavior:
+
+Function declarations (green box) work in circular dependencies due to hoisting
+Arrow functions and const declarations (red box) fail in circular dependencies
 
 <a name="es6-exports--imports-cheat-sheet"></a>
 ### ES6 exports / imports cheat sheet
