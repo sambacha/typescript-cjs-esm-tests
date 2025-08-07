@@ -1,8 +1,29 @@
+# Fundementals of ESM/CJS modules and their Heresies
+
+<!-- TOC start (generated with https://github.com/derlin/bitdowntoc) -->
+
 - [`std.module.format` ](#stdmoduleformat)
-      + [ES6 exports / imports cheat sheet](#es6-exports--imports-cheat-sheet)
+      + [Different Types of Imports and Exports](#different-types-of-imports-and-exports)
+   * [The Special Case of `export default`](#the-special-case-of-export-default)
+      + [Why the Difference?](#why-the-difference)
+   * [The Third Way: `export { thing as default }`](#the-third-way-export-thing-as-default-)
+      + [Special Case: `export default function`](#special-case-export-default-function)
+   * [Circular Dependencies and Hoisting](#circular-dependencies-and-hoisting)
+      + [Function Hoisting Behavior](#function-hoisting-behavior)
+      + [Circular Dependencies Example](#circular-dependencies-example)
+   * [Summary](#summary)
+   * [Why you may need to publish CJS to have ESM work](#why-you-may-need-to-publish-cjs-to-have-esm-work)
+   * [Usage](#usage)
+      + [Multiple Entries](#multiple-entries)
+      + [Custom Files](#custom-files)
+      + [Best Practices](#best-practices)
+         - [Named exports (blue boxes) create live references when imported through any import syntax](#named-exports-blue-boxes-create-live-references-when-imported-through-any-import-syntax)
+         - [Default exports (orange boxes) behave differently:](#default-exports-orange-boxes-behave-differently)
+         - [Circular dependencies behavior:](#circular-dependencies-behavior)
+      + [ES6 exports / imports cheat sheet](#es6-exports-imports-cheat-sheet)
    * [`package.json` TLDR](#packagejson-tldr)
    * [Problematic Settings](#problematic-settings)
-      + [~~Dont use `browser` field~~ Use `browser` specifically for CDN's](#dont-use-browser-field-use-browser-specifically-for-cdns)
+      + [~~Dont use `browser` field~~ Use `browser` specifically for CDN's, YMMV per module usage](#dont-use-browser-field-use-browser-specifically-for-cdns-ymmv-per-module-usage)
       + [Restrictions on Import Assertions Under ](#restrictions-on-import-assertions-under)
       + [dont use `preserveModules` ](#dont-use-preservemodules)
       + [`moduleResolution` `NodeNext` only allows defined import paths ](#moduleresolution-nodenext-only-allows-defined-import-paths)
@@ -21,10 +42,10 @@
       + [Cheatsheet](#cheatsheet)
    * [Avoid Default Exports and Prefer Named Exports](#avoid-default-exports-and-prefer-named-exports)
       + [Context](#context)
-      + [Summary](#summary)
+      + [Summary](#summary-1)
    * [Decision](#decision)
       + [ECMAScript Module Support in Node.js](#ecmascript-module-support-in-nodejs)
-      + [`.mjs`, `.cjs`, == `.mts`, `.cts` && `.d.mts` and `.d.cts`.](#mjs-cjs--mts-cts--dmts-and-dcts)
+      + [`.mjs`, `.cjs`, == `.mts`, `.cts` && `.d.mts` and `.d.cts`.](#mjs-cjs-mts-cts-dmts-and-dcts)
    * [Avoid Export Default](#avoid-export-default)
       + [Poor Discoverability](#poor-discoverability)
       + [Autocomplete](#autocomplete)
@@ -35,11 +56,11 @@
       + [Dynamic Imports](#dynamic-imports)
       + [ES Module Interop](#es-module-interop)
             * [Note](#note)
-      + [Needs two lines for non-class / non-function](#needs-two-lines-for-non-class--non-function)
-      + [React.js - Named Exports](#reactjs---named-exports)
+      + [Needs two lines for non-class / non-function](#needs-two-lines-for-non-class-non-function)
+      + [React.js - Named Exports](#reactjs-named-exports)
    * [{} type](#-type)
       + [If you want a type that means "empty object"](#if-you-want-a-type-that-means-empty-object)
-      + [If you are using React, and you want to define `type Props = {}`.](#if-you-are-using-react-and-you-want-to-define-type-props--)
+      + [If you are using React, and you want to define `type Props = {}`.](#if-you-are-using-react-and-you-want-to-define-type-props-)
       + [`GenericObject`](#genericobject)
       + [Module-related host hooks](#module-related-host-hooks)
    * [Customizing module resolution](#customizing-module-resolution)
@@ -49,6 +70,8 @@
       + [Disable verbatimModuleSyntax](#disable-verbatimmodulesyntax)
       + [Use a compatibility layer](#use-a-compatibility-layer)
    * [License](#license)
+
+<!-- TOC end -->
 
 <a name="stdmoduleformat"></a>
 # `std.module.format` 
@@ -218,6 +241,206 @@ export default function thing() {}
 export default thing;
 export default 'hello!';
 ```
+
+## Why you may need to publish CJS to have ESM work
+
+> `cjyes` [![npm version](https://img.shields.io/npm/v/cjyes.svg)](https://www.npmjs.org/package/cjyes)
+
+> source: <https://gist.github.com/developit/96de429483bb98927c7cd27c773b0fff>
+
+If you're publishing ES Modules, you need to also publish CommonJS versions of those modules.
+
+This isn't to support old browsers or Node versions: even in Node 14, using `require()` to load a module won't work if it's only available as ESM.
+
+`cjyes` is the bare minimum fix for this problem. You write ES Modules and fill out a valid `package.json`, and it'll generate the corresponding CommonJS files pretty much instantly. `cjyes` takes up 500kb of disk space including its two dependencies.
+
+## Usage
+
+The easiest way to use `cjyes` is to define [package exports](https://nodejs.org/api/esm.html#esm_conditional_exports) the way Node 13+ requires:
+
+```json
+{
+  "main": "index.mjs",
+  "exports": {
+    "import": "./index.mjs",
+    "require": "./dist/index.cjs"
+  },
+  "scripts": {
+    "prepare": "cjyes"
+  },
+  "devDependencies": {
+	"cjyes": "^0.3.0"
+  }
+}
+```
+
+`cjyes` will create CommonJS versions of all modules listed in the `"exports"` field and place them at the specified locations.
+
+> You can also use `.js` file extensions and the `{"type":"module"}` field - cjyes will detect this and generate the required `.cjs` output files.
+
+### Multiple Entries
+
+Multiple entry points are supported automatically. Simply define them in your export map:
+
+```json
+{
+  "main": "index.mjs",
+  "exports": {
+    ".": {
+      "import": "./index.mjs",
+      "require": "./index.cjs"
+	},
+    "./jsx": {
+      "import": "./jsx.mjs",
+      "require": "./jsx.cjs"
+	},
+    "./hooks": {
+      "import": "./hooks/index.mjs",
+      "require": "./hooks/index.cjs"
+	}
+  },
+  "scripts": { "prepare": "cjyes" },
+  "devDependencies": { "cjyes": "^0.3.0" }
+}
+```
+
+### Custom Files
+
+It is also possible to pass a list of input modules to `cjyes` directly:
+
+```sh
+cjyes src/index.js src/other.mjs
+# generates the following:
+# dist/
+#    index.cjs
+#    other.cjs
+```
+
+<details>
+<summary> cjyes.js code
+
+</summary>
+
+~~~javascript
+#! /usr/bin/env node
+
+const path = require('path');
+const fs = require('fs').promises;
+const MagicString = require('magic-string').default;
+const { parse } = require('es-module-lexer');
+
+const ALIASES = {
+	'-v': 'verbose',
+	'-s': 'silent',
+	'-d': 'dry'
+};
+const FLAGS = {
+	default: 'Force `exports.default=` instead of `module.exports=`',
+	flat: 'Force merging named exports into default (module.exports=A;exports.B=B)',
+	dry: `Don't write anything to disk [-d]`,
+	verbose: 'Verbose output logging [-v]',
+	silent: 'No output logging [-s]'
+};
+run(process.argv.slice(2))
+	.then(() => process.exit(0))
+	.catch(err => (console.error(err), process.exit(1)));
+
+async function run(argv) {
+	const flags = {};
+	const files = argv.filter(file => {
+		return !((file in ALIASES || file.startsWith('--')) && (flags[ALIASES[file] || file.substring(2)] = true));
+	});
+	if (flags.help) return console.log(`cjyes [...files]\nOptions:\n    ${Object.keys(FLAGS).map(k=>`--${k.padEnd(7)}  ${FLAGS[k]}`).join('\n    ')}`);
+	let pkg;
+	try {
+		pkg = JSON.parse(await fs.readFile('package.json','utf-8'));
+	} catch (e) {}
+	if (files.length === 0 && pkg && pkg.exports) {
+		crawl(pkg.exports, files);
+		if (flags.verbose) {
+			console.log(`[cjyes] Using files listing from Export Map:\n  ${files.join('\n  ')}`);
+		}
+	}
+	const ctx = {};
+	return Promise.all(files.map(f => cjs(f, { flags, pkg, ctx })))
+}
+
+async function cjs(file, { flags, pkg, ctx }) {
+	const code = await fs.readFile(file, 'utf-8');
+	const out = new MagicString(code);
+	const [imports, exports] = await parse(code, file);
+	for (const imp of imports) {
+		const spec = JSON.stringify(code.substring(imp.s, imp.e));
+		const s = code.substring(imp.ss + 6, imp.s - 1).replace(/\s*from\s*/g, '');
+		const r = `const ${s.replace(/\sas\s/g, ':')} = require(${spec})`;
+		out.overwrite(imp.ss, imp.se, r);
+	}
+	const nonDefaultExports = exports.filter(p => p!=='default');
+	const defaultExport = !flags.flat && (flags.default || nonDefaultExports.length) ? 'exports.default=' : 'module.exports=';
+	const t = /(^|[;\s(])export(\s*default)?(?:\s*{[^}]+}|\s+(function|const|let|var))/g;
+	let token;
+	while ((token = t.exec(code))) {
+		const r = `${token[2] ? defaultExport : ''}${token[3] || ''}`;
+		out.overwrite(token.index + token[1].length, t.lastIndex, r);
+	}
+	for (const exp of nonDefaultExports) out.append(`\nexports.${exp}=${exp};`);
+
+	let outFile;
+	// use the export map if one exists:
+	const entry = './' + file.replace(/\.m?js$/, '').split(path.sep).join('/');
+	const def = pkg && pkg.exports && resolve(pkg.exports, entry);
+	if (def) {
+		if (flags.verbose) {
+			console.log(`[cjyes] using Export Map entry for ${entry}`);
+		}
+		outFile = def.replace(/^\.\//,'').split('/').join(path.sep);
+	}
+	else {
+		// fall back to a dist directory
+		const ext = pkg && pkg.type === 'module' ? '.cjs' : '.js';
+		const parts = file.replace(/\.m?js$/, ext).split(path.sep);
+		const index = parts.lastIndexOf('src');
+		if (index === -1) parts.unshift('dist');
+		else parts[index] = 'dist';
+		outFile = parts.join(path.sep);
+		if (!flags.silent && !ctx.warned) {
+			ctx.warned = true;
+			console.log(`[cjyes] no Export Map found, generating filenames:`);
+			if (ext=='.cjs') console.log(`  - Using .cjs due to {"type":"module"}`);
+			if (index===-1) console.log(`  - Replacing src/ with dist/`);
+			else console.log(`  - Prepending dist/ directory`);
+		}
+	}
+	if (!flags.dry) {
+		try {
+			await fs.mkdir(path.dirname(outFile), { recursive: true });
+		} catch (e) {}
+		await fs.writeFile(outFile, out.toString());
+	}
+	if (!flags.silent) {
+		console.log(`${file} --> ${outFile}`);
+	}
+}
+
+function crawl(exp, files) {
+	if (typeof exp==='string') files.push(exp.replace(/^\.\//,''));
+	else if (exp.import || exp.default) crawl(exp.import || exp.default, files);
+	else for (let i in exp) {
+		if (i[0]=='.' && !i.endsWith('/')) crawl(exp[i], files);
+	}
+}
+
+function resolve(exp, entry) {
+	if (!exp || typeof exp=='string') return exp;
+	return exp.require || exp.default || resolve(select(exp, entry) || exp['.'], entry);
+}
+
+function select(exp, entry) {
+	for (let i in exp) if (i==entry) return exp[i];
+}
+~~~
+
+</details>
 
 _Note: The original article was written by Jake Archibald, with contributions from the V8 team members Toon Verwaest, Marja Hölttä, and Mathias Bynens, as well as Dave Herman and Daniel Ehrenberg._
 
